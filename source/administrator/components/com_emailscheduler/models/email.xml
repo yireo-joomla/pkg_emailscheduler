@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="item">
+        <fieldset name="basic" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_BASIC">
+            <field name="subject" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_SUBJECT" class="input-xlarge inputbox" size="60" required="true" labelclass="control-label" />
+            <field name="from" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_FROM" class="inputbox" size="60" required="true" labelclass="control-label" />
+            <field name="to" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_TO" class="inputbox" size="60" required="true" labelclass="control-label" />
+        </fieldset>
+        <fieldset name="other" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_OTHER">
+            <field name="cc" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_CC" class="inputbox" size="40" labelclass="control-label" />
+            <field name="bcc" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_BCC" class="inputbox" size="40" labelclass="control-label" />
+            <field name="send_date" type="calendar" filter="no" label="COM_EMAILSCHEDULER_FIELDNAME_SEND_DATE" class="inputbox" size="40" labelclass="control-label" />
+            <field name="template_id" type="sql" label="COM_EMAILSCHEDULER_FIELDNAME_TEMPLATE" value_field="label" key_field="value"
+                query="SELECT `label`, id AS value FROM #__emailscheduler_templates">
+                <option value="">JNONE</option>
+            </field>
+            <field name="send_state" type="list" label="COM_EMAILSCHEDULER_FIELDNAME_SEND_STATE" class="inputbox" labelclass="control-label">
+                <option value="pending">COM_EMAILSCHEDULER_STATE_PENDING</option>
+                <option value="sent">COM_EMAILSCHEDULER_STATE_SENT</option>
+                <option value="failed">COM_EMAILSCHEDULER_STATE_FAILED</option>
+                <option value="paused">COM_EMAILSCHEDULER_STATE_PAUSED</option>
+            </field>
+        </fieldset>
+        <fieldset name="editor" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_EDITOR">
+            <field name="body_html" type="editor" label="COM_EMAILSCHEDULER_FIELDNAME_BODY_HTML" class="inputbox" labelclass="control-label" />
+            <field name="body_text" type="textarea" label="COM_EMAILSCHEDULER_FIELDNAME_BODY_TEXT" class="inputbox" labelclass="control-label" />
+        </fieldset>
+    </fields>
+    <fields name="params">
+        <fieldset name="params">
+            <field name="encoding" type="list" label="COM_EMAILSCHEDULER_FIELDNAME_ENCODING" class="inputbox" default="1" labelclass="control-label">
+                <option value="base64">base64</option>
+            </field>
+        </fieldset>
+    </fields>
+</form>

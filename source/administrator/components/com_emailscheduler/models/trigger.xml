@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="item">
+        <fieldset name="basic" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_BASIC">
+            <field name="label" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_LABEL" class="input-xlarge inputbox" size="60" required="true" labelclass="control-label" />
+        </fieldset>
+        <!--<fieldset name="trigger" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_TRIGGER">
+        </fieldset>-->
+        <fieldset name="action" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_ACTION">
+            <field name="type" type="list" label="COM_EMAILSCHEDULER_FIELDNAME_TYPE" class="inputbox" required="true" labelclass="control-label">
+                <option value="">JSELECT</option>
+                <option value="user">COM_EMAILSCHEDULER_FIELDNAME_TYPE_USER</option>
+                <option value="usergroup">COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP</option>
+                <option value="all">COM_EMAILSCHEDULER_FIELDNAME_TYPE_ALL</option>
+                <option value="specific">COM_EMAILSCHEDULER_FIELDNAME_TYPE_SPECIFIC</option>
+            </field>
+            <field name="type_usergroup" type="usergroup" class="inputbox" size="10" labelclass="control-label"
+                label="COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP" description="COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP_DESC" />
+            <field name="type_specific" type="textarea" class="inputbox" size="40" labelclass="control-label"
+                label="COM_EMAILSCHEDULER_FIELDNAME_TYPE_SPECIFIC" description="COM_EMAILSCHEDULER_FIELDNAME_TYPE_SPECIFIC_DESC" />
+        </fieldset>
+    </fields>
+    <fields name="params">
+        <fieldset name="params">
+            <field name="template_id" type="sql" label="COM_EMAILSCHEDULER_FIELDNAME_TEMPLATE" value_field="label" key_field="value"
+                query="SELECT `label`, id AS value FROM #__emailscheduler_templates">
+                <option value="">JNONE</option>
+            </field>
+        </fieldset>
+    </fields>
+</form>

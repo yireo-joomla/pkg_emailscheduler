@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fields>
+        <fieldset name="basic">
+        </fieldset>
+        <fieldset name="backend" label="LIB_YIREO_CONFIG_TAB_BACKEND">
+            <field name="backend_feed" type="radio" default="1" label="LIB_YIREO_CONFIG_FIELD_BACKEND_FEED" description="LIB_YIREO_CONFIG_FIELD_BACKEND_FEED_DESC">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="support_key" type="text" default="" size="60"
+                label="LIB_YIREO_CONFIG_FIELD_SUPPORT_KEY" description="LIB_YIREO_CONFIG_FIELD_SUPPORT_KEY_DESC" />
+        </fieldset>
+    </fields>
+</config>

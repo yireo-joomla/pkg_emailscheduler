@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5.0" method="upgrade">
+    <name>COM_EMAILSCHEDULER</name>
+    <author>Yireo</author>
+    <authoremail>info@yireo.com</authoremail>
+    <authorurl>http://www.yireo.com</authorurl>
+    <creationDate>March 2014</creationDate>
+    <copyright>Copyright (C) 2014 Yireo.com. All rights reserved.</copyright>
+    <license>http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL</license>
+    <version>0.0.3</version>
+    <description>COM_EMAILSCHEDULER_DESC</description>
+
+    <!-- installation part -->
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+    <update>
+        <schemas>
+             <schemapath type="mysql">sql</schemapath>
+        </schemas>
+    </update>
+
+    <scriptfile>script.emailscheduler.php</scriptfile>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>emailscheduler.php</filename>
+    </files>
+    
+    <!-- administration part -->
+    <administration>
+
+        <menu task="default" img="../media/com_emailscheduler/images/menu-emailscheduler.png">COM_EMAILSCHEDULER</menu>
+        <submenu>
+            <menu link="option=com_emailscheduler&amp;view=home">COM_EMAILSCHEDULER_HOME</menu>
+            <menu link="option=com_emailscheduler&amp;view=emails">COM_EMAILSCHEDULER_EMAILS</menu>
+            <menu link="option=com_emailscheduler&amp;view=logs">COM_EMAILSCHEDULER_LOGS</menu>
+        </submenu>
+
+        <files folder="admin">
+            <folder>helpers</folder>
+            <folder>lib</folder>
+            <folder>models</folder>
+            <folder>sql</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+            <filename>api.php</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>index.html</filename>
+            <filename>emailscheduler.php</filename>
+        </files>
+
+        <languages folder="admin/language">
+            <language tag="en-GB">en-GB.com_emailscheduler.sys.ini</language>
+            <language tag="en-GB">en-GB.com_emailscheduler.ini</language>
+            <language tag="en-GB">en-GB.lib_yireo.ini</language>
+        </languages>
+
+    </administration>
+    
+    <media folder="media" destination="com_emailscheduler">
+        <folder>css</folder>
+        <folder>js</folder>
+        <folder>images</folder>
+        <filename>index.html</filename>
+    </media>
+
+    <updateservers>
+        <server type="extension" priority="1" name="com_emailscheduler">http://www.yireo.com/updates/com_emailscheduler.xml</server>
+    </updateservers>
+</extension>
