@@ -83,7 +83,7 @@ class Emailscheduler
      * Method to set the from address
      *
      * @access public
-     * @param string $fom
+     * @param string $from
      * @return bool
      */
     public function setFrom($from)
