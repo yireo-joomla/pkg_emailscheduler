@@ -11,16 +11,16 @@ jQuery(function($) {
 
     function hideshowTypes()
     {
-        $('[name="item[type_usergroup]"]').attr('disabled', 'disabled');
-        $('[name="item[type_specific]"]').attr('disabled', 'disabled');
-        var type = $('[name="item[type_' + $('#item_type').val() + ']"]');
+        $('[name="actions[type_usergroup]"]').attr('disabled', 'disabled');
+        $('[name="actions[type_specific]"]').attr('disabled', 'disabled');
+        var type = $('[name="actions[type_' + $('#actions_type').val() + ']"]');
         if(type) {
             type.removeAttr('disabled');
         }
     }
 
     hideshowTypes();
-    $('#item_type').change(function() {
+    $('#actions_type').change(function() {
         hideshowTypes();
     });
 });

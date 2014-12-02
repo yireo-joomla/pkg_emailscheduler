@@ -25,7 +25,19 @@ class EmailschedulerViewTrigger extends YireoViewForm
 	public function display($tpl = null)
 	{
         YireoHelper::bootstrap();
+
         $this->fetchItem();
+
+        $data = (array)$this->getModel()->getData();
+        $form = $this->getModel()->getForm();
+        
+        JPluginHelper::importPlugin('emailscheduler');
+        $dispatcher = JEventDispatcher::getInstance();
+        $results = $dispatcher->trigger('onEmailschedulerTriggerPrepareForm', array(&$form, &$data));
+
+        $form->bind(array('item' => $data, 'actions' => $data['actions']));
+        $this->assignRef('form', $form);
+
 		parent::display($tpl);
 	}
 }

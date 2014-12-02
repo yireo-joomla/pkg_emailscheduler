@@ -88,6 +88,11 @@ class Emailscheduler
      */
     public function setFrom($from)
     {
+        if(empty($from)) {
+            $config = JFactory::getConfig();
+            $from = $config->get('mailfrom');
+        }
+        
         $this->data['from'] = $from;
     }
 

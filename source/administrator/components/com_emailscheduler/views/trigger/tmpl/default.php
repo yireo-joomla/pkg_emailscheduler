@@ -17,14 +17,19 @@ jimport('joomla.utilities.utility');
 ?>
 <?php echo $this->loadTemplate('script'); ?>
 
-<form method="post" name="adminForm" id="adminForm">
+<form method="post" name="adminForm" id="adminForm" role="form">
 <div class="row-fluid">
     <div class="span6">
         <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'basic')); ?>
-        <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'trigger')); ?>
-        <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'action')); ?>
+        <?php foreach($this->form->getFieldsets() as $fieldsetName => $fieldset): ?>
+            <?php if(preg_match('/^condition/', $fieldsetName)) : ?>
+                <?php echo $this->loadTemplate('fieldset', array('fieldset' => $fieldsetName)); ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </div>
     <div class="span6">
+        <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'actions')); ?>
+        <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'recipients')); ?>
         <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'params')); ?>
     </div>
 </div>

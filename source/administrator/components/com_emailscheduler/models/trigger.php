@@ -28,6 +28,19 @@ class EmailschedulerModelTrigger extends YireoModel
         parent::__construct('trigger');
     }
 
+    public function onDataLoad($data)
+    {
+        if(is_string($data->actions)) {
+            $data->actions = json_decode($data->actions, true);
+        }
+
+        if(is_string($data->condition)) {
+            $data->condition = json_decode($data->condition, true);
+        }
+
+        return $data;
+    }
+
     /**
      * Method to store the model
      *
@@ -38,6 +51,22 @@ class EmailschedulerModelTrigger extends YireoModel
      */
     public function store($data)
     {
+        if(!isset($data['condition']) || !is_array($data['condition'])) {
+            $data['condition'] = array();
+        }
+
+        JPluginHelper::importPlugin('emailscheduler');
+        $dispatcher = JEventDispatcher::getInstance();
+        $results = $dispatcher->trigger('onEmailschedulerTriggerSaveBefore', array(&$data));
+
+        $data['condition'] = json_encode($data['condition']);
+
+        if(!isset($data['actions']) || !is_array($data['actions'])) {
+            $data['actions'] = array();
+        }
+
+        $data['actions'] = json_encode($data['actions']);
+
         return parent::store($data);
     }
 }

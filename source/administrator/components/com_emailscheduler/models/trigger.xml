@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fields name="item">
-        <fieldset name="basic" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_BASIC">
+        <fieldset name="basic" label="COM_EMAILSCHEDULER_FIELDSET_BASIC">
             <field name="label" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_LABEL" class="input-xlarge inputbox" size="60" required="true" labelclass="control-label" />
+            <field name="published" type="radio" default="1" class="btn-group jpublished"
+                label="JPUBLISHED" required="1">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
         </fieldset>
-        <!--<fieldset name="trigger" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_TRIGGER">
-        </fieldset>-->
-        <fieldset name="action" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_ACTION">
+    </fields>
+    <fields name="actions">
+        <fieldset name="actions" label="COM_EMAILSCHEDULER_FIELDSET_ACTIONS" addfieldpath="/administrator/components/com_emailscheduler/fields">
+            <field name="article_id" label="COM_EMAILSCHEDULER_FIELDNAME_ARTICLE_ID" type="article" default="0" />
+        </fieldset>
+        <fieldset name="recipients" label="COM_EMAILSCHEDULER_FIELDSET_RECIPIENTS">
             <field name="type" type="list" label="COM_EMAILSCHEDULER_FIELDNAME_TYPE" class="inputbox" required="true" labelclass="control-label">
                 <option value="">JSELECT</option>
                 <option value="user">COM_EMAILSCHEDULER_FIELDNAME_TYPE_USER</option>
-                <option value="usergroup">COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP</option>
-                <option value="all">COM_EMAILSCHEDULER_FIELDNAME_TYPE_ALL</option>
+                <!--<option value="usergroup">COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP</option>-->
+                <!--<option value="all">COM_EMAILSCHEDULER_FIELDNAME_TYPE_ALL</option>-->
                 <option value="specific">COM_EMAILSCHEDULER_FIELDNAME_TYPE_SPECIFIC</option>
             </field>
-            <field name="type_usergroup" type="usergroup" class="inputbox" size="10" labelclass="control-label"
-                label="COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP" description="COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP_DESC" />
+            <!--<field name="type_usergroup" type="usergroup" class="inputbox" size="10" labelclass="control-label"
+                label="COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP" description="COM_EMAILSCHEDULER_FIELDNAME_TYPE_USERGROUP_DESC" />-->
             <field name="type_specific" type="textarea" class="inputbox" size="40" labelclass="control-label"
                 label="COM_EMAILSCHEDULER_FIELDNAME_TYPE_SPECIFIC" description="COM_EMAILSCHEDULER_FIELDNAME_TYPE_SPECIFIC_DESC" />
         </fieldset>
@@ -26,6 +34,8 @@
                 query="SELECT `label`, id AS value FROM #__emailscheduler_templates">
                 <option value="">JNONE</option>
             </field>
+            <field name="bcc" label="COM_EMAILSCHEDULER_FIELDNAME_BCC" type="text" />
+            <field name="delay" label="COM_EMAILSCHEDULER_FIELDNAME_DELAY" type="text" />
         </fieldset>
     </fields>
 </form>
