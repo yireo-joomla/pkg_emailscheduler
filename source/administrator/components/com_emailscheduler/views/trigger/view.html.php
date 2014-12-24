@@ -32,10 +32,18 @@ class EmailschedulerViewTrigger extends YireoViewForm
         $form = $this->getModel()->getForm();
         
         JPluginHelper::importPlugin('emailscheduler');
-        $dispatcher = JEventDispatcher::getInstance();
+        if(YireoHelper::isJoomla25()) {
+            $dispatcher = JDispatcher::getInstance();
+        } else {
+            $dispatcher = JEventDispatcher::getInstance();
+        }
         $results = $dispatcher->trigger('onEmailschedulerTriggerPrepareForm', array(&$form, &$data));
 
-        $form->bind(array('item' => $data, 'actions' => $data['actions']));
+        $form->bind(array(
+            'item' => $data, 
+            'actions' => $data['actions'],
+            'condition' => $data['condition'],
+        ));
         $this->assignRef('form', $form);
 
 		parent::display($tpl);

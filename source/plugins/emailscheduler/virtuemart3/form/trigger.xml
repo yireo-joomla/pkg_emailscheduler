@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="condition" addfieldpath="administrator/components/com_virtuemart/fields">
+        <fieldset name="condition_virtuemart3">
+            <field name="virtuemart3.product" type="text" 
+                label="PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_PRODUCT" 
+                description="PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_PRODUCT_DESC" />
+            <field name="virtuemart3.order_status" type="list" multiple="multiple"
+                label="PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS"
+                description="PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_DESC">
+                <option value="P">PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_OPTION_P</option>
+                <option value="U">PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_OPTION_U</option>
+                <option value="C">PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_OPTION_C</option>
+                <option value="X">PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_OPTION_X</option>
+                <option value="R">PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_OPTION_R</option>
+                <option value="S">PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_ORDER_STATUS_OPTION_S</option>
+            </field>
+        </fieldset>
+    </fields>
+</form>

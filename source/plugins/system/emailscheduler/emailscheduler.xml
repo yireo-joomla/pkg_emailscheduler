@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="system" method="upgrade">
+    <name>PLG_SYSTEM_EMAILSCHEDULER</name>
+    <author>Yireo</author>
+    <creationDate>December 2014</creationDate>
+    <copyright>Copyright (C) 2014 Yireo.com. All rights reserved.</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <authorEmail>info@yireo.com</authorEmail>
+    <authorUrl>www.yireo.com</authorUrl>
+    <version>0.1.0</version>
+    <description>PLG_SYSTEM_EMAILSCHEDULER_DESC</description>
+
+    <files>
+        <filename plugin="emailscheduler">emailscheduler.php</filename>
+        <filename>index.html</filename>
+    </files>
+
+    <languages>
+        <language tag="en-GB">en-GB.plg_system_emailscheduler.ini</language>
+        <language tag="en-GB">en-GB.plg_system_emailscheduler.sys.ini</language>
+    </languages>
+
+</extension>

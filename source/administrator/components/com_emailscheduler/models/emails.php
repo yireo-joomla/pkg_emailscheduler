@@ -29,7 +29,8 @@ class EmailschedulerModelEmails extends YireoModel
 
         $send_state = $this->getFilter('send_state');
         if(!empty($send_state)) {
-            $this->addWhere('send_state = `'.$send_state).'`';
+            $db = JFactory::getDBO();
+            $this->addWhere($db->quoteName('send_state') . '=' . $db->quote($send_state));
         }
 
         $this->_search = array('subject');

@@ -56,7 +56,11 @@ class EmailschedulerModelTrigger extends YireoModel
         }
 
         JPluginHelper::importPlugin('emailscheduler');
-        $dispatcher = JEventDispatcher::getInstance();
+        if(YireoHelper::isJoomla25()) {
+            $dispatcher = JDispatcher::getInstance();
+        } else {
+            $dispatcher = JEventDispatcher::getInstance();
+        }
         $results = $dispatcher->trigger('onEmailschedulerTriggerSaveBefore', array(&$data));
 
         $data['condition'] = json_encode($data['condition']);
