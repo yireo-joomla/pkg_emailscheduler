@@ -3,7 +3,7 @@
  * Joomla! component Emailscheduler
  *
  * @author Yireo (info@yireo.com)
- * @copyright Copyright Yireo.com 2013
+ * @copyright Copyright Yireo.com 2015
  * @license GNU Public License
  * @link http://www.yireo.com
  */
@@ -49,6 +49,21 @@ class EmailschedulerModelEmail extends YireoModel
      */
     public function store($data)
     {
+        $send_date = (isset($data['item']['send_date'])) ? $data['item']['send_date'] : null;
+        $send_time = (isset($data['item']['send_time'])) ? $data['item']['send_time'] : null;
+
+        $send_date = strtotime($send_date);
+        if(!empty($send_time) && preg_match('/([0-9]{2}):([0-9]{2})/', $send_time)) {
+            $send_date = date('Y-m-d', $send_date) . ' ' . $send_time;
+            $send_date = strtotime($send_date);
+        }
+
+        if(empty($send_date)) {
+            $send_date = time() + 5*60;
+        }
+            
+        $data['item']['send_date'] = date('Y-m-d H:i:s', $send_date);
+            
         return parent::store($data);
     }
 
@@ -65,12 +80,27 @@ class EmailschedulerModelEmail extends YireoModel
         $data = $this->getData(true);
         $mailData = clone $data;
 
+        // Recheck the status
+        if($mailData->send_state != 'pending') {
+            return false; 
+        }
+
+        // Change status to processing
+        $mailData->send_state = 'processing';
+        $this->store((array)$mailData);
+
         // Load the associated template
         $this->loadTemplate($mailData->template_id);
 
         // Variables
         $mailer = JFactory::getMailer();
         $config = JFactory::getConfig();
+
+        if(YireoHelper::isJoomla25()) {
+            $dispatcher = JDispatcher::getInstance();
+        } else {
+            $dispatcher = JEventDispatcher::getInstance();
+        }
 
         // Set sender
         if(empty($mailData->from)) {
@@ -117,6 +147,9 @@ class EmailschedulerModelEmail extends YireoModel
         $mailData = $this->parseLinks($mailData);
         $mailData = $this->parseText($mailData);
 
+        // Allow plugins to modify the data
+        $dispatcher->trigger('onEmailschedulerMailAfterSend', array(&$mailData));
+
         // Set subject
         $mailer->setSubject($mailData->subject);
             
@@ -147,6 +180,9 @@ class EmailschedulerModelEmail extends YireoModel
         // Send the message
         $rt = $mailer->Send();
 
+        // Allow plugins to modify the data
+        $dispatcher->trigger('onEmailschedulerMailAfterSend', array(&$mailData));
+
         // Prepare log-data
         $logData = array(
             'email_id' => $data->id,
@@ -154,11 +190,15 @@ class EmailschedulerModelEmail extends YireoModel
         );
 
         // Handle send response
-        if ($rt == true) {
+        if ($rt == true)
+        {
+            $logData['message'] = (!empty($send->message)) ? $send->message : null;
             $logData['send_state'] = self::SEND_STATE_SENT;
             $data->send_state = $logData['send_state'];
             $data->send_date = $logData['send_state'];
-        } else {
+        } 
+        else
+        {
             $logData['message'] = (!empty($send->message)) ? $send->message : null;
             $logData['send_state'] = self::SEND_STATE_FAILED;
             $data->send_state = $logData['send_state'];
@@ -170,13 +210,13 @@ class EmailschedulerModelEmail extends YireoModel
         $logModel->store($logData);
 
         // Save status
-        $data = (array)$data;
-        $this->store($data);
+        $this->store((array) $data);
         
         // Return
         if($rt == true) {
             return true;
         }
+
         return false;
     }
 
@@ -309,8 +349,11 @@ class EmailschedulerModelEmail extends YireoModel
     {
         $send_date = strtotime($data->send_date);
         if(empty($send_date)) {
-            $data->send_date = date('Y-m-d H:i:s', time() + 5*60);
+            $send_date = time() + 5*60;
+            $data->send_date = date('Y-m-d H:i:s', $send_date);
         }
+            
+        $data->send_time = date('H:i:s', $send_date);
 
         return $data;
     }

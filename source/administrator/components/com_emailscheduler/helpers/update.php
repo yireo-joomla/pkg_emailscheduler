@@ -42,7 +42,14 @@ class EmailschedulerUpdate
     {
         $db = JFactory::getDBO();
         $buffer = file_get_contents($sqlfile);
-        $queries = JDatabaseDriver::splitSql($buffer);
+
+        if(method_exists('JDatabaseDriver', 'splitSql')) {
+            $queries = JDatabaseDriver::splitSql($buffer);
+        } elseif(method_exists('JDatabase', 'splitSql')) {
+            $queries = JDatabase::splitSql($buffer);
+        } else {    
+            return false;
+        }
 
         foreach ($queries as $query)
         {

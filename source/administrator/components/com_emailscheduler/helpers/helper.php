@@ -24,6 +24,9 @@ class EmailschedulerHelper
         $rows = array(
             array('title' => JText::_('COM_EMAILSCHEDULER_STATE_SENT'), 'value' => 'sent'), 
             array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PENDING'), 'value' => 'pending'), 
+            array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PROCESSING'), 'value' => 'processing'), 
+            array('title' => JText::_('COM_EMAILSCHEDULER_STATE_FAILED'), 'value' => 'failed'), 
+            array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PAUSED'), 'value' => 'paused'), 
         );
 
         if ($include_null) {

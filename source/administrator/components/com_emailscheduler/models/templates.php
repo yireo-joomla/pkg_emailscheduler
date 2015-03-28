@@ -3,7 +3,7 @@
  * Joomla! component Emailscheduler
  *
  * @author Yireo (info@yireo.com)
- * @copyright Copyright Yireo.com 2013
+ * @copyright Copyright Yireo.com 2015
  * @license GNU Public License
  * @link http://www.yireo.com
  */

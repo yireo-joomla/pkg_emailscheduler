@@ -3,7 +3,7 @@
  * Joomla! component Emailscheduler
  *
  * @author Yireo (info@yireo.com)
- * @copyright Copyright Yireo.com 2013
+ * @copyright Copyright Yireo.com 2015
  * @license GNU Public License
  * @link http://www.yireo.com
  */
@@ -33,7 +33,7 @@ class EmailschedulerModelEmails extends YireoModel
             $this->addWhere($db->quoteName('send_state') . '=' . $db->quote($send_state));
         }
 
-        $this->_search = array('subject');
+        $this->_search = array('subject', 'to', 'cc', 'bcc');
         $this->_orderby_default = 'send_date';
     }
 

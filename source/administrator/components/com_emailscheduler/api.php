@@ -144,7 +144,7 @@ class Emailscheduler
     public function setSendDate($send_date)
     {
         if(!is_numeric($send_date)) $send_date = strtotime($send_date);
-        if(empty($send_date) || $send_date < time()) $send_date = time();
+        if(empty($send_date) || $send_date < (time() - 60)) $send_date = time();
         $this->data['send_date'] = date('Y-m-d H:i:s', $send_date);
 
         return $this;
@@ -276,11 +276,13 @@ class Emailscheduler
     static public function send()
     {
         ini_set('display_errors', 1);
-        $query = 'SELECT id FROM #__emailscheduler_emails WHERE send_date < NOW() AND send_state = "pending"';
+        $query = 'SELECT `id` FROM `#__emailscheduler_emails` WHERE `send_date` < NOW() AND `send_state` = "pending"';
         $db = JFactory::getDBO();
         $db->setQuery($query);
         $rows = $db->loadObjectList();
-        if(empty($rows)) {
+
+        if(empty($rows))
+        {
             return false;
         }
 
@@ -289,7 +291,9 @@ class Emailscheduler
         require_once JPATH_ADMINISTRATOR.'/components/com_emailscheduler/tables/email.php';
         require_once JPATH_ADMINISTRATOR.'/components/com_emailscheduler/models/email.php';
         $model = new EmailschedulerModelEmail();
-        foreach($rows as $row) {
+
+        foreach($rows as $row)
+        {
             $model->setId($row->id);
             $model->send();
         }

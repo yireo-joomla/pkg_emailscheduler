@@ -3,7 +3,7 @@
  * Joomla! component Emailscheduler
  *
  * @author Yireo (info@yireo.com)
- * @copyright Copyright Yireo.com 2013
+ * @copyright Copyright Yireo.com 2015
  * @license GNU Public License
  * @link http://www.yireo.com
  */
@@ -27,7 +27,7 @@ class EmailschedulerModelLogs extends YireoModel
     {
         parent::__construct('log');
 
-        $this->_search = array('message');
+        $this->_search = array('email.subject', 'email.from', 'email.to', 'email.cc', 'email.bcc');
         $this->_orderby_default = 'email_id';
     }
 

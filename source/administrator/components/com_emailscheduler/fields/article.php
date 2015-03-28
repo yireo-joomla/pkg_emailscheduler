@@ -1,25 +1,22 @@
 <?php
 /**
- * @copyright    Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * Joomla! component Emailscheduler
+ *
+ * @author Yireo (info@yireo.com)
+ * @copyright Copyright 2015
+ * @license GNU Public License
+ * @link http://www.yireo.com
  */
 
 defined('JPATH_BASE') or die;
 
 /**
- * Supports a modal article picker.
- *
- * @package        Joomla.Administrator
- * @subpackage    com_content
- * @since        1.6
+ * Form field that adds a modal article picker plus a reset-button
  */
 class JFormFieldArticle extends JFormField
 {
     /**
      * The form field type.
-     *
-     * @var        string
-     * @since    1.6
      */
     protected $type = 'Article';
 
@@ -27,7 +24,6 @@ class JFormFieldArticle extends JFormField
      * Method to get the field input markup.
      *
      * @return    string    The field input markup.
-     * @since    1.6
      */
     protected function getInput()
     {

@@ -49,7 +49,7 @@ class TableEmail extends YireoTable
         // Autocorrect sending time
         $send_date = strtotime($data['send_date']);
         if(empty($send_date) || $send_date < time()) {
-            $data['send_date'] = date('Y-m-d H:i:s', time() + 60*5);
+            $data['send_date'] = date('Y-m-d H:i:s', time());
         }
 
         // Convert arrays into strings

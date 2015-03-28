@@ -23,6 +23,8 @@ class EmailschedulerController extends YireoController
     public function __construct()
     {
         $this->_default_view = 'home';
+        $this->_allow_raw[] = 'body_html';
+        $this->_allow_raw[] = 'body';
         parent::__construct();
     }
 
