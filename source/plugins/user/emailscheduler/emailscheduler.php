@@ -53,9 +53,8 @@ class PlgUserEmailscheduler extends JPlugin
 		}
 
         // Double check the user
-        $userObject = new JUser();
-        $userObject->load($user_id);
-        if($userObject->id == 0 || $userObject->block == 1)
+        $userObject = JFactory::getUser($user_id);
+        if($userObject == false || $userObject->id == 0 || $userObject->block == 1)
         {
             return false;
         }

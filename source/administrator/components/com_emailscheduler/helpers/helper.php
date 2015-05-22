@@ -126,8 +126,8 @@ class EmailschedulerHelper
 
         // Load the user by its user-ID
         $user_id = $row->id;
-        $user = new JUser();
-        if ($user->load($user_id) == false) {
+        $user = JFactory::getUser($user_id);
+        if ($user == false || empty($user->id)) {
             return false;
         }
 

@@ -1,12 +1,11 @@
-<?php 
-/**
- * Joomla! Yireo Lib
+<?php
+/*
+ * Joomla! component Emailscheduler
  *
- * @author Yireo
- * @package YireoLib
+ * @author Yireo (info@yireo.com)
  * @copyright Copyright 2015
  * @license GNU Public License
- * @link http://www.yireo.com/
+ * @link http://www.yireo.com
  */
 
 // Check to ensure this file is included in Joomla!
@@ -21,11 +20,19 @@ jimport('joomla.utilities.utility');
 <div class="row-fluid">
     <div class="span6">
         <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'basic')); ?>
+		<?php $conditionMatch = false; ?>
         <?php foreach($this->form->getFieldsets() as $fieldsetName => $fieldset): ?>
             <?php if(preg_match('/^condition/', $fieldsetName)) : ?>
                 <?php echo $this->loadTemplate('fieldset', array('fieldset' => $fieldsetName)); ?>
+				<?php $conditionMatch = true; ?>
             <?php endif; ?>
         <?php endforeach; ?>
+		<?php if ($conditionMatch == false) : ?>
+			<fieldset>
+				<legend><?php echo JText::_('LIB_YIREO_VIEW_FORM_FIELDSET_TRIGGER'); ?></legend>
+				<p><?php echo JText::_('COM_EMAILSCHEDULER_NO_TRIGGERS_FOUND'); ?></p>
+			</fieldset>
+		<?php endif; ?>
     </div>
     <div class="span6">
         <?php echo $this->loadTemplate('fieldset', array('fieldset' => 'actions')); ?>
