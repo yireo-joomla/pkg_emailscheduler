@@ -335,6 +335,42 @@ class Emailscheduler
 	}
 
 	/**
+	 * Method to delete an email that already is in the queue
+	 *
+	 * @param mixed $search ID, message ID or associated array uniquely identifying this email
+	 *
+	 * @return bool
+	 */
+	static public function delete($search = '')
+	{
+		// Load the model and save the data
+		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/tables/email.php';
+		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/models/email.php';
+
+		$model = new EmailschedulerModelEmail;
+
+		if (is_numeric($search))
+		{
+			$model->load($search);
+		}
+		elseif (is_string($search) && strlen($search) == 32)
+		{
+			$model->loadByMessageId($search);
+		}
+		elseif (is_array($search))
+		{
+			$model->loadBySearch($search);
+		}
+
+		if ($model->getId() > 0)
+		{
+			$rt = $model->delete(array($model->getId()));
+		}
+
+		return $rt;
+	}
+
+	/**
 	 * Static method to save all pending emails
 	 *
 	 * @return bool
@@ -342,8 +378,14 @@ class Emailscheduler
 	static public function send()
 	{
 		ini_set('display_errors', 1);
-		$query = 'SELECT `id` FROM `#__emailscheduler_emails` WHERE `send_date` < NOW() AND `send_state` = "pending"';
+
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('id'));
+		$query->from($db->quoteName('#__emailscheduler_emails'));
+		$query->where($db->quoteName('send_date') . ' < NOW()');
+		$query->where($db->quoteName('send_state') . '=' . $db->quote('pending'));
+
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 

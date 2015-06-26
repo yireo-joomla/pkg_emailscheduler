@@ -40,6 +40,95 @@ class EmailschedulerModelEmail extends YireoModel
 	}
 
 	/**
+	 * Method to load the model
+	 *
+	 * @param int $id
+	 *
+	 * @return array
+	 */
+	public function load($id)
+	{
+		$this->setId($id);
+		$data = (object) $this->getData(true);
+
+		return $data;
+	}
+
+	/**
+	 * Method to load the model by message ID
+	 *
+	 * @param string $messageId
+	 *
+	 * @return false|array
+	 */
+	public function loadByMessageId($messageId)
+	{
+		if (empty($messageId) || !is_string($messageId))
+		{
+			return false;
+		}
+
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('id'));
+		$query->from($db->quoteName('#__emailscheduler_emails'));
+		$query->where($db->quoteName('message_id') . '=' . $db->quote($messageId));
+
+		$query->setLimit(1);
+		$db->setQuery($query);
+		$id = $db->loadResult();
+
+		if (empty($id))
+		{
+			return false;
+		}
+
+		$this->setId($id);
+		$data = (object) $this->getData(true);
+
+		return $data;
+	}
+
+	/**
+	 * Method to load the model
+	 *
+	 * @param array $search
+	 *
+	 * @return false|array
+	 */
+	public function loadBySearch($search = array())
+	{
+		if (empty($search) || !is_array($search))
+		{
+			return false;
+		}
+
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('id'));
+		$query->from($db->quoteName('#__emailscheduler_emails'));
+
+		foreach ($search as $searchName => $searchValue)
+		{
+			$query->where($db->quoteName($searchName) . '=' . $db->quote($searchValue));
+		}
+
+		$query->setLimit(1);
+		$db->setQuery($query);
+		$id = $db->loadResult();
+
+		if (empty($id))
+		{
+			return false;
+		}
+
+		$this->setId($id);
+		$data = (object) $this->getData(true);
+
+		return $data;
+	}
+
+	/**
 	 * Method to store the model
 	 *
 	 * @access     public
@@ -123,6 +212,7 @@ class EmailschedulerModelEmail extends YireoModel
 		foreach ($recipients as $recipient)
 		{
 			$recipient = trim($recipient);
+
 			if (!empty($recipient))
 			{
 				$mailer->addRecipient($recipient);
@@ -181,8 +271,6 @@ class EmailschedulerModelEmail extends YireoModel
 		{
 			$mailer->setBody($mailData->body_text);
 		}
-
-		//echo $mailData->body_html;exit;
 
 		// Optional attachments
 		if (!empty($mailData->attachments))
