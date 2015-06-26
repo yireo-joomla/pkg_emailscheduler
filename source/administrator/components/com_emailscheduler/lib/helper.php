@@ -188,7 +188,12 @@ class YireoHelper
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_MAXCONNECTS, 1);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 1);
             curl_setopt($ch, CURLOPT_USERAGENT, (!empty($useragent)) ? $useragent : $_SERVER['HTTP_USER_AGENT']);
             $contents = curl_exec($ch);
         } else {
@@ -217,7 +222,12 @@ class YireoHelper
         if(!empty($params) && is_string($params)) $registry->loadString($params);
         if(!empty($params) && is_array($params)) $registry->loadArray($params);
 
-        $fileContents = @file_get_contents($file);
+        if(is_file($file) && is_readable($file)) {
+            $fileContents = file_get_contents($file);
+        } else {
+            $fileContents = null;
+        }
+
         if(preg_match('/\.xml$/', $fileContents)) {
             $registry->loadFile($file, 'XML');
         } elseif(preg_match('/\.json$/', $fileContents)) {
