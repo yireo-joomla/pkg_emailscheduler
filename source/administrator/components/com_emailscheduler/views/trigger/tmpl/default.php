@@ -29,8 +29,8 @@ jimport('joomla.utilities.utility');
         <?php endforeach; ?>
 		<?php if ($conditionMatch == false) : ?>
 			<fieldset>
-				<legend><?php echo JText::_('LIB_YIREO_VIEW_FORM_FIELDSET_TRIGGER'); ?></legend>
-				<p><?php echo JText::_('COM_EMAILSCHEDULER_NO_TRIGGERS_FOUND'); ?></p>
+				<legend><?php echo JText::_('LIB_YIREO_VIEW_FORM_FIELDSET_CONDITIONS'); ?></legend>
+				<p><?php echo JText::_('COM_EMAILSCHEDULER_NO_CONDITIONS_FOUND'); ?></p>
 			</fieldset>
 		<?php endif; ?>
     </div>

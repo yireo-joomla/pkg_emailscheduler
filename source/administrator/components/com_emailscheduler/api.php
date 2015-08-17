@@ -33,10 +33,11 @@ class Emailscheduler
 	 * @param mixed  $from
 	 * @param mixed  $attachments
 	 * @param int    $send_date
+	 * @param array	 $variables
 	 *
 	 * @return $this
 	 */
-	public function __construct($subject = '', $body = '', $recipients = null, $from = null, $attachments = null, $send_date = 0)
+	public function __construct($subject = '', $body = '', $recipients = null, $from = null, $attachments = null, $send_date = 0, $variables = null)
 	{
 		// Construct data
 		$this->setBody($body);
@@ -45,6 +46,7 @@ class Emailscheduler
 		$this->setFrom($from);
 		$this->setAttachments($attachments);
 		$this->setSendDate($send_date);
+		$this->setVariables($variables);
 
 		return $this;
 	}
@@ -130,6 +132,20 @@ class Emailscheduler
 	public function setAttachments($attachments)
 	{
 		$this->data['attachments'] = $attachments;
+
+		return $this;
+	}
+
+	/**
+	 * Method to set the variables
+	 *
+	 * @param array $variables
+	 *
+	 * @return $this
+	 */
+	public function setVariables($variables)
+	{
+		$this->data['variables'] = $variables;
 
 		return $this;
 	}
@@ -301,7 +317,7 @@ class Emailscheduler
 	public function setAdditionalVariables($variables)
 	{
 		$this->data['additional_variables'] = $variables;
-		
+
 		return $this;
 	}
 
@@ -361,6 +377,8 @@ class Emailscheduler
 		{
 			$model->loadBySearch($search);
 		}
+
+		$rt = false;
 
 		if ($model->getId() > 0)
 		{

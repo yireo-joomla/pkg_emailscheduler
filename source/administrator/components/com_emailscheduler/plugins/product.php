@@ -19,6 +19,13 @@ require_once JPATH_SITE . '/administrator/components/com_emailscheduler/plugins/
  */
 class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 {
+	/**
+	 * Method to get a listing of the stored triggers
+	 *
+	 * @param array $like
+	 *
+	 * @return mixed
+	 */
 	public function getTriggers($like = array())
 	{
 		$db = JFactory::getDBO();
@@ -26,7 +33,10 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 
 		$selectFields = $db->quoteName(array('condition', 'actions', 'access', 'params'));
 		$tableName = $db->quoteName('#__emailscheduler_triggers');
-		$query->select($selectFields)->from($tableName)->where($db->quoteName('published') . '=1')->order($db->quoteName('ordering') . ' ASC');
+		$query->select($selectFields)
+			->from($tableName)
+			->where($db->quoteName('published') . '=1')
+			->order($db->quoteName('ordering') . ' ASC');
 
 		if (!empty($like))
 		{
@@ -49,6 +59,14 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 		return $triggers;
 	}
 
+	/**
+	 * Method to perform the actions contained in a trigger and save the email accordingly
+	 *
+	 * @param $actions
+	 * @param $params
+	 *
+	 * @return bool
+	 */
 	public function doActions($actions, $params)
 	{
 		// Exit if there's no article
@@ -70,6 +88,7 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 		// Construct the API
 		$email = new Emailscheduler;
 		$email->setArticle($actions['article_id']);
+		$email->setMessageId($this->getUniqueMessageId($actions, $params));
 
 		// Set the template
 		if ($params['template_id'] > 0)
@@ -111,7 +130,7 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 		// Set additional variables
 		if (!empty($params['variables']))
 		{
-			$email->setAdditionalVariables($params['variables']);
+			$email->setVariables($params['variables']);
 		}
 
 		// Save this mail with a bit of delay
@@ -119,5 +138,23 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 		$email->save();
 
 		return true;
+	}
+
+	/**
+	 * Create an unique string that identifies this email
+	 *
+	 * @param $actions
+	 * @param $params
+	 *
+	 * @return string
+	 */
+	public function getUniqueMessageId($actions, $params)
+	{
+		if (isset($params['variables']))
+		{
+			unset($params['variables']);
+		}
+
+		return md5(var_export($actions, true) . var_export($params, true));
 	}
 }

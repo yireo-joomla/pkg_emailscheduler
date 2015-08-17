@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
 
 class EmailschedulerModelEmail extends YireoModel
 {
-	/*
+	/**
 	 * Definition of send-states
 	 */
 	const SEND_STATE_PENDING = 'pending';
@@ -140,8 +140,31 @@ class EmailschedulerModelEmail extends YireoModel
 	 */
 	public function store($data)
 	{
-		$send_date = (isset($data['item']['send_date'])) ? $data['item']['send_date'] : null;
-		$send_time = (isset($data['item']['send_time'])) ? $data['item']['send_time'] : null;
+		if (isset($data['item']['send_date']))
+		{
+			$send_date = $data['item']['send_date'];
+		}
+		elseif (isset($data['send_date']))
+		{
+			$send_date = $data['send_date'];
+		}
+		else
+		{
+			$send_date = null;
+		}
+
+		if (isset($data['item']['send_time']))
+		{
+			$send_time = $data['item']['send_time'];
+		}
+		elseif (isset($data['send_time']))
+		{
+			$send_time = $data['send_time'];
+		}
+		else
+		{
+			$send_time = null;
+		}
 
 		$send_date = strtotime($send_date);
 
@@ -162,41 +185,30 @@ class EmailschedulerModelEmail extends YireoModel
 	}
 
 	/**
-	 * Method to send the email
+	 * Method to prepare this email for sending
 	 *
-	 * @return bool
+	 * @param object $mailData
 	 */
-	public function send()
+	public function prepare(&$mailData)
 	{
-		// Get the data
-		$data = (object) $this->getData(true);
-		$mailData = clone $data;
-
-		// Recheck the status
-		if ($mailData->send_state != 'pending')
-		{
-			return false;
-		}
-
-		// Change status to processing
-		$mailData->send_state = 'processing';
-		$this->store((array) $mailData);
-
 		// Load the associated template
 		$this->loadTemplate($mailData->template_id);
 
-		// Variables
-		$mailer = JFactory::getMailer();
-		$config = JFactory::getConfig();
+		// Parse the text
+		$this->parseImages($mailData);
+		$this->parseLinks($mailData);
+		$this->parseText($mailData);
+	}
 
-		if (YireoHelper::isJoomla25())
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
+	/**
+	 * Method to prepare this email for sending
+	 *
+	 * @param object $mailData
+	 * @param object $mailer
+	 */
+	public function prepareAddresses(&$mailData, &$mailer)
+	{
+		$config = JFactory::getConfig();
 
 		// Set sender
 		if (empty($mailData->from))
@@ -250,29 +262,16 @@ class EmailschedulerModelEmail extends YireoModel
 				}
 			}
 		}
+	}
 
-		// Parse the text
-		$mailData = $this->parseImages($mailData);
-		$mailData = $this->parseLinks($mailData);
-		$mailData = $this->parseText($mailData);
-
-		// Allow plugins to modify the data
-		$dispatcher->trigger('onEmailschedulerMailAfterSend', array(&$mailData));
-
-		// Set subject
-		$mailer->setSubject($mailData->subject);
-
-		// Set body
-		if (!empty($mailData->body_html))
-		{
-			$mailer->setBody($mailData->body_html);
-		}
-		else
-		{
-			$mailer->setBody($mailData->body_text);
-		}
-
-		// Optional attachments
+	/**
+	 * Method to prepare the attachments
+	 *
+	 * @param object $mailData
+	 * @param object $mailer
+	 */
+	public function prepareAttachments(&$mailData, &$mailer)
+	{
 		if (!empty($mailData->attachments))
 		{
 			$attachments = explode(',', $mailData->attachments);
@@ -292,6 +291,63 @@ class EmailschedulerModelEmail extends YireoModel
 				}
 			}
 		}
+	}
+
+	/**
+	 * Method to send the email
+	 *
+	 * @return bool
+	 */
+	public function send()
+	{
+		// Get the data
+		$data = (object) $this->getData(true);
+		$mailData = clone $data;
+
+		// Recheck the status
+		if ($mailData->send_state != 'pending')
+		{
+			return false;
+		}
+
+		// Change status to processing
+		$mailData->send_state = 'processing';
+		$this->store((array) $mailData);
+
+		// Variables
+		$mailer = JFactory::getMailer();
+
+		// Prepare this mail for sending
+		$this->prepare($mailData);
+		$this->prepareAddresses($mailData, $mailer);
+
+		if (YireoHelper::isJoomla25())
+		{
+			$dispatcher = JDispatcher::getInstance();
+		}
+		else
+		{
+			$dispatcher = JEventDispatcher::getInstance();
+		}
+
+		// Allow plugins to modify the data
+		$dispatcher->trigger('onEmailschedulerMailBeforeSend', array(&$mailData));
+
+		// Set subject
+		$mailer->setSubject($mailData->subject);
+
+		// Set body
+		if (!empty($mailData->body_html))
+		{
+			$mailer->setBody($mailData->body_html);
+		}
+		else
+		{
+			$mailer->setBody($mailData->body_text);
+		}
+
+		// Optional attachments
+		$this->prepareAttachments($mailData, $mailer);
 
 		// Parse the parameters
 		$params = YireoHelper::toRegistry($mailData->params);
@@ -305,29 +361,7 @@ class EmailschedulerModelEmail extends YireoModel
 		// Allow plugins to modify the data
 		$dispatcher->trigger('onEmailschedulerMailAfterSend', array(&$mailData));
 
-		// Prepare log-data
-		$logData = array('email_id' => $data->id, 'send_date' => date('Y-m-d H:i:s'),);
-
-		// Handle send response
-		if ($rt == true)
-		{
-			$logData['message'] = (!empty($mailer->message)) ? $mailer->message : null;
-			$logData['send_state'] = self::SEND_STATE_SENT;
-			$data->send_state = $logData['send_state'];
-			$data->send_date = $logData['send_state'];
-		}
-		else
-		{
-			$logData['message'] = (!empty($mailer->message)) ? $mailer->message : null;
-			$logData['send_state'] = self::SEND_STATE_FAILED;
-			$data->send_state = $logData['send_state'];
-		}
-
-		// Save logdata
-		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/models/log.php';
-
-		$logModel = new EmailschedulerModelLog;
-		$logModel->store($logData);
+		$this->logSend($data, $rt, $mailer);
 
 		// Save status
 		$this->store((array) $data);
@@ -344,11 +378,8 @@ class EmailschedulerModelEmail extends YireoModel
 	/**
 	 * Method to load the related template
 	 *
-	 * @access protected
-	 *
 	 * @param int $template_id
 	 *
-	 * @return null
 	 */
 	protected function loadTemplate($template_id)
 	{
@@ -372,78 +403,119 @@ class EmailschedulerModelEmail extends YireoModel
 	/**
 	 * Method to parse the text-parts for variables and template
 	 *
-	 * @access protected
-	 *
-	 * @param object $data
-	 *
-	 * @return null
+	 * @param object $mailData
 	 */
-	protected function parseText($data)
+	protected function parseText(&$mailData)
 	{
 		// Apply the template to the HTML-body
 		if (!empty($this->template_body))
 		{
-			$data->body_html = str_ireplace('{body}', $data->body_html, $this->template_body);
+			$mailData->body_html = str_ireplace('{body}', $mailData->body_html, $this->template_body);
 		}
 
 		// Apply the template to the subject
 		if (!empty($this->template_subject))
 		{
-			$data->subject = str_ireplace('{subject}', $data->subject, $this->template_subject);
+			$mailData->subject = str_ireplace('{subject}', $mailData->subject, $this->template_subject);
 		}
 
 		// Construct variables
-		$variables = array();
-		$variables['email'] = $data->to;
-		$variables['subject'] = $data->subject;
+		$templateVariables = array();
+		$templateVariables['email'] = $mailData->to;
+		$templateVariables['subject'] = $mailData->subject;
 
 		// Replace user-variables
-		$user = EmailschedulerHelper::loadByEmail($data->to);
+		$user = EmailschedulerHelper::loadByEmail($mailData->to);
 
 		if (is_object($user))
 		{
-			$variables['username'] = $user->username;
-			$variables['name'] = $user->name;
+			$templateVariables['username'] = $user->username;
+			$templateVariables['name'] = $user->name;
 		}
 		else
 		{
-			$variables['username'] = null;
-			$variables['name'] = null;
+			$templateVariables['username'] = null;
+			$templateVariables['name'] = null;
 		}
 
-		// Add additional variables
-		if (isset($data->additional_variables) && is_array($data->additional_variables))
+		// Add variables
+		if (isset($mailData->variables) && is_array($mailData->variables))
 		{
-			foreach ($data->additional_variables as $name => $value)
+			foreach ($mailData->variables as $name => $value)
 			{
-				$variables[$name] = $value;
+				$templateVariables[$name] = $value;
 			}
 		}
 
-		// Replace variables
-		foreach ($variables as $variableName => $variableValue)
+		// Add additional variables
+		if (isset($mailData->additional_variables) && is_array($mailData->additional_variables))
 		{
-			$data->body_html = str_ireplace('{' . $variableName . '}', $variableValue, $data->body_html);
-			$data->body_text = str_ireplace('{' . $variableName . '}', $variableValue, $data->body_text);
-			$data->subject = str_ireplace('{' . $variableName . '}', $variableValue, $data->subject);
+			foreach ($mailData->additional_variables as $name => $value)
+			{
+				$templateVariables[$name] = $value;
+			}
 		}
 
-		return $data;
+		$this->parseViaTwig($mailData->body_html, $templateVariables);
+
+		// Replace variables
+		foreach ($templateVariables as $variableName => $variableValue)
+		{
+			if (is_string($variableValue) == false && is_numeric($variableValue) == false)
+			{
+				continue;
+			}
+
+			$mailData->body_html = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->body_html);
+			$mailData->body_text = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->body_text);
+			$mailData->subject = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->subject);
+		}
+	}
+
+	/**
+	 * Method to use Twig to parse a text
+	 *
+	 * @param string $text
+	 * @param array $variables
+	 */
+	public function parseViaTwig(&$text, $variables)
+	{
+		$this->initTwig();
+
+		$loader = new Twig_Loader_Array(array(
+			'body' => $text,
+		));
+
+		$twig = new Twig_Environment($loader);
+
+		$text = $twig->render('body', $variables);
+	}
+
+	/**
+	 * Method to initialize Twig
+	 */
+	public function initTwig()
+	{
+		static $initTwig = false;
+
+		if ($initTwig == false)
+		{
+			$initTwig = true;
+
+			require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/vendor/Twig/Autoloader.php';
+			Twig_Autoloader::register();
+		}
 	}
 
 	/**
 	 * Method to scan text for links and convert them
 	 *
-	 * @access protected
-	 *
-	 * @param string $text
-	 *
-	 * @return null
+	 * @param object $mailData
 	 */
-	protected function parseLinks($data)
+	protected function parseLinks(&$mailData)
 	{
 		// Scan the body for links
-		$body_html = $data->body_html;
+		$body_html = $mailData->body_html;
 
 		if (preg_match_all('/("|\')index.php\?option=com_([^\"\']+)/', $body_html, $matches))
 		{
@@ -455,27 +527,21 @@ class EmailschedulerModelEmail extends YireoModel
 			}
 		}
 
-		$data->body_html = $body_html;
-
-		return $data;
+		$mailData->body_html = $body_html;
 	}
 
 	/**
 	 * Method to scan text for images and add them as embedded
 	 *
-	 * @access protected
-	 *
-	 * @param string $text
-	 *
-	 * @return null
+	 * @param object $mailData
 	 */
-	protected function parseImages($data)
+	protected function parseImages(&$mailData)
 	{
 		$root = substr(JURI::root(), 0, -1);
 		$root = str_replace('/administrator', '', $root);
 
 		// Scan the body for links
-		$body_html = $data->body_html;
+		$body_html = $mailData->body_html;
 
 		if (preg_match_all('/src=("|\')([^\"\']+)/', $body_html, $matches))
 		{
@@ -497,10 +563,43 @@ class EmailschedulerModelEmail extends YireoModel
 			}
 		}
 
-		$data->body_html = $body_html;
+		$mailData->body_html = $body_html;
 
 		// @todo: $mailer->AddEmbeddedImage($image, md5($image), basename($image), 'base64', $mimetype);
-		return $data;
+	}
+
+	/**
+	 * Method to log the send action
+	 *
+	 * @param $data
+	 * @param $rt
+	 * @param $mailer
+	 */
+	public function logSend($data, $rt, $mailer)
+	{
+		// Prepare log-data
+		$logData = array('email_id' => $data->id, 'send_date' => date('Y-m-d H:i:s'),);
+
+		// Handle send response
+		if ($rt == true)
+		{
+			$logData['message'] = (!empty($mailer->message)) ? $mailer->message : null;
+			$logData['send_state'] = self::SEND_STATE_SENT;
+			$data->send_state = $logData['send_state'];
+			$data->send_date = $logData['send_state'];
+		}
+		else
+		{
+			$logData['message'] = (!empty($mailer->message)) ? $mailer->message : null;
+			$logData['send_state'] = self::SEND_STATE_FAILED;
+			$data->send_state = $logData['send_state'];
+		}
+
+		// Save logdata
+		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/models/log.php';
+
+		$logModel = new EmailschedulerModelLog;
+		$logModel->store($logData);
 	}
 
 	/**
@@ -523,6 +622,11 @@ class EmailschedulerModelEmail extends YireoModel
 		}
 
 		$data->send_time = date('H:i:s', $send_date);
+
+		if (!empty($data->variables))
+		{
+			$data->variables = unserialize($data->variables);
+		}
 
 		return $data;
 	}

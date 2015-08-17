@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="item" addfieldpath="components/com_hikashop/fields">
+    <fields name="condition" addfieldpath="administrator/components/com_emailscheduler/fields">
         <fieldset name="condition_hikashop">
-            <field name="hikashop.product" type="selectproduct" label="PLG_EMAILSCHEDULER_HIKASHOP_FIELD_PRODUCT" desc="PLG_EMAILSCHEDULER_HIKASHOP_FIELD_PRODUCT_DESC" />
+            <field name="hikashop.product" type="emailscheduler.typeahead" multiple="1" plugin="hikashop"
+                   label="PLG_EMAILSCHEDULER_HIKASHOP_FIELD_PRODUCT"
+                   description="PLG_EMAILSCHEDULER_HIKASHOP_FIELD_PRODUCT_DESC"/>
         </fieldset>
     </fields>
 </form>

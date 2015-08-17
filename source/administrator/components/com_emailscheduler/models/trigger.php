@@ -14,63 +14,69 @@ defined('_JEXEC') or die();
 /*
  * Emailscheduler Trigger model
  */
+
 class EmailschedulerModelTrigger extends YireoModel
 {
-    /**
-     * Constructor method
-     *
-     * @access public
-     * @param null
-     * @return null
-     */
-    public function __construct()
-    {
-        parent::__construct('trigger');
-    }
+	/**
+	 * Constructor method
+	 *
+	 * @access public
+	 *
+	 * @param null
+	 *
+	 * @return null
+	 */
+	public function __construct()
+	{
+		parent::__construct('trigger');
+	}
 
-    public function onDataLoad($data)
-    {
-        if(is_string($data->actions)) {
-            $data->actions = json_decode($data->actions, true);
-        }
+	public function onDataLoad($data)
+	{
+		if (is_string($data->actions))
+		{
+			$data->actions = json_decode($data->actions, true);
+		}
 
-        if(is_string($data->condition)) {
-            $data->condition = json_decode($data->condition, true);
-        }
+		if (is_string($data->condition))
+		{
+			$data->condition = json_decode($data->condition, true);
+		}
 
-        return $data;
-    }
+		return $data;
+	}
 
-    /**
-     * Method to store the model
-     *
-     * @access public
-     * @subpackage Yireo
-     * @param mixed $data
-     * @return bool
-     */
-    public function store($data)
-    {
-        if(!isset($data['condition']) || !is_array($data['condition'])) {
-            $data['condition'] = array();
-        }
+	/**
+	 * Method to store the model
+	 *
+	 * @access     public
+	 * @subpackage Yireo
+	 *
+	 * @param mixed $data
+	 *
+	 * @return bool
+	 */
+	public function store($data)
+	{
+		if (!isset($data['condition']) || !is_array($data['condition']))
+		{
+			$data['condition'] = array();
+		}
 
-        JPluginHelper::importPlugin('emailscheduler');
-        if(YireoHelper::isJoomla25()) {
-            $dispatcher = JDispatcher::getInstance();
-        } else {
-            $dispatcher = JEventDispatcher::getInstance();
-        }
-        $results = $dispatcher->trigger('onEmailschedulerTriggerSaveBefore', array(&$data));
+		JPluginHelper::importPlugin('emailscheduler');
+		$dispatcher = JEventDispatcher::getInstance();
 
-        $data['condition'] = json_encode($data['condition']);
+		$dispatcher->trigger('onEmailschedulerTriggerSaveBefore', array(&$data));
 
-        if(!isset($data['actions']) || !is_array($data['actions'])) {
-            $data['actions'] = array();
-        }
+		$data['condition'] = json_encode($data['condition']);
 
-        $data['actions'] = json_encode($data['actions']);
+		if (!isset($data['actions']) || !is_array($data['actions']))
+		{
+			$data['actions'] = array();
+		}
 
-        return parent::store($data);
-    }
+		$data['actions'] = json_encode($data['actions']);
+
+		return parent::store($data);
+	}
 }

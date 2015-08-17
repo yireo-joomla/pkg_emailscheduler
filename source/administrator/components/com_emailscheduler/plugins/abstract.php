@@ -2,15 +2,15 @@
 /**
  * EmailScheduler component
  *
- * @author Yireo (info@yireo.com)
- * @package EmailScheduler
+ * @author    Yireo (info@yireo.com)
+ * @package   EmailScheduler
  * @copyright Copyright 2015
- * @license GNU Public License
- * @link http://www.yireo.com
+ * @license   GNU Public License
+ * @link      http://www.yireo.com
  */
 
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
 
 /**
  * EmailScheduler Abstract Plugin parent class
@@ -20,8 +20,8 @@ class EmailschedulerPluginAbstract extends JPlugin
 	/**
 	 * Constructor.
 	 *
-	 * @param   object  &$subject  The object to observe.
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject The object to observe.
+	 * @param   array  $config   An optional associative array of configuration settings.
 	 */
 	public function __construct(& $subject, $config)
 	{
@@ -34,17 +34,19 @@ class EmailschedulerPluginAbstract extends JPlugin
 	/**
 	 * Method to log or debug something
 	 *
-	 * @param   string  $message Message to log
-	 * @param   string  $variable Variable to dump
+	 * @param   string $message  Message to log
+	 * @param   string $variable Variable to dump
 	 *
 	 * @return null
 	 */
 	protected function log($message, $variable = null)
 	{
 		$log = $message;
-        if(!empty($variable)) {
-            $log .= ': '.var_export($variable, true);
-        }
+
+		if (!empty($variable))
+		{
+			$log .= ': ' . var_export($variable, true);
+		}
 
 		JLog::add($log, JLog::NOTICE, 'emailscheduler');
 	}

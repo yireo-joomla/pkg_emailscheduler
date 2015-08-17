@@ -16,20 +16,49 @@ defined('_JEXEC') or die();
  */
 class EmailschedulerViewEmail extends YireoViewForm
 {
-    /*
-     * Display method
-     *
-     * @param string $tpl
-     * @return null
-     */
+	/**
+	 * Display method
+	 *
+	 * @param string $tpl
+	 *
+	 * @return null
+	 */
 	public function display($tpl = null)
 	{
-        YireoHelper::jquery();
-        $this->document->addScript( JURI::root().'media/com_emailscheduler/js/backend.js' ) ;
-        $this->fetchItem();
+		$layout = $this->application->input->getCmd('layout');
 
-        // @todo: Allow for selecting attachments
+		if ($layout == 'preview')
+		{
+			return $this->displayPreview();
+		}
+
+		YireoHelper::jquery();
+		$this->document->addScript(JURI::root() . 'media/com_emailscheduler/js/backend.js');
+		$this->fetchItem();
+
+		// @todo: Allow for selecting attachments
 
 		parent::display($tpl);
+	}
+
+	/**
+	 * Display method for the preview page
+	 *
+	 * @param string $tpl
+	 *
+	 * @return null
+	 */
+	public function displayPreview($tpl = 'preview')
+	{
+		$model = $this->getModel();
+
+		// Get the data
+		$data = (object) $model->getData(true);
+		$mailData = clone $data;
+
+		$model->prepare($mailData);
+
+		echo $mailData->body_html;
+		exit;
 	}
 }

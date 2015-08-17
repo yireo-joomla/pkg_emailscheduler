@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="condition" addfieldpath="administrator/components/com_virtuemart/fields">
+    <fields name="condition" addfieldpath="administrator/components/com_emailscheduler/fields">
         <fieldset name="condition_virtuemart3">
-            <field name="virtuemart3.product" type="text" 
+            <field name="virtuemart3.product" type="emailscheduler.typeahead" multiple="1" plugin="virtuemart3"
                 label="PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_PRODUCT" 
                 description="PLG_EMAILSCHEDULER_VIRTUEMART3_FIELD_PRODUCT_DESC" />
             <field name="virtuemart3.order_status" type="list" multiple="multiple"

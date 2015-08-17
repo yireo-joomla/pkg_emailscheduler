@@ -2,17 +2,17 @@
 /**
  * EmailScheduler plugin - HikaShop
  *
- * @author Yireo (info@yireo.com)
- * @package EmailScheduler
+ * @author    Yireo (info@yireo.com)
+ * @package   EmailScheduler
  * @copyright Copyright 2015
- * @license GNU Public License
- * @link http://www.yireo.com
+ * @license   GNU Public License
+ * @link      http://www.yireo.com
  */
 
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
 
-require_once JPATH_SITE.'/administrator/components/com_emailscheduler/plugins/abstract.php';
+require_once JPATH_SITE . '/administrator/components/com_emailscheduler/plugins/abstract.php';
 
 /**
  * EmailScheduler Trigger Plugin parent class

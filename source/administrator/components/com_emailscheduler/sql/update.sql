@@ -1,0 +1,1 @@
+ALTER TABLE `#__emailscheduler_emails` ADD `variables` TEXT NOT NULL AFTER `attachments`;
