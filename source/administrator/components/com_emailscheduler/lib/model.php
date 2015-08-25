@@ -314,6 +314,16 @@ class YireoModel extends YireoCommonModel
         if (is_numeric($limit) == false) {
             $limit = $this->getFilter('list_limit', JFactory::getConfig()->get('list_limit')); 
         }
+
+        if (empty($limit)) {
+            $this->_limit_query = true;
+            $total = $this->getTotal();
+
+            if ($total > 3000) {
+                $limit = 500;
+            }
+        }
+
         $this->setState('limit', $limit);
     }
 

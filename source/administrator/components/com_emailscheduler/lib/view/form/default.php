@@ -32,5 +32,6 @@ jimport('joomla.utilities.utility');
 			<?php echo $this->loadTemplate('fieldset', array('fieldset' => 'editor')); ?>
 		</div>
 	</div>
+	<?php echo $this->loadTemplate('custom'); ?>
 	<?php echo $this->loadTemplate('formend'); ?>
 </form>

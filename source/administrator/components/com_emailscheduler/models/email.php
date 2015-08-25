@@ -195,9 +195,9 @@ class EmailschedulerModelEmail extends YireoModel
 		$this->loadTemplate($mailData->template_id);
 
 		// Parse the text
+		$this->parseText($mailData);
 		$this->parseImages($mailData);
 		$this->parseLinks($mailData);
-		$this->parseText($mailData);
 	}
 
 	/**

@@ -12,7 +12,7 @@
     </fields>
     <fields name="actions">
         <fieldset name="actions" label="COM_EMAILSCHEDULER_FIELDSET_ACTIONS" addfieldpath="/administrator/components/com_emailscheduler/fields">
-            <field name="article_id" label="COM_EMAILSCHEDULER_FIELDNAME_ARTICLE_ID" type="article" default="0" />
+            <field name="article_id" label="COM_EMAILSCHEDULER_FIELDNAME_ARTICLE_ID" type="article" default="0" required="true" />
         </fieldset>
         <fieldset name="recipients" label="COM_EMAILSCHEDULER_FIELDSET_RECIPIENTS">
             <field name="type" type="list" label="COM_EMAILSCHEDULER_FIELDNAME_TYPE" class="inputbox" required="true" labelclass="control-label">
