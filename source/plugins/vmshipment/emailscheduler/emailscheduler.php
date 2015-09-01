@@ -53,7 +53,7 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 		// Exit if there is no order ID
 		$order_id = $data->virtuemart_order_id;
 
-		if (empty($order_id))
+        if (empty($order_id))
 		{
 			return true;
 		}
@@ -68,7 +68,6 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 		{
 			$application = JFactory::getApplication();
 			$application->enqueueMessage($e->getMessage(), 'error');
-			echo 'test: '.$e->getMessage();
 
 			return false;
 		}
@@ -79,7 +78,15 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 			return true;
 		}
 
-		// Handle the order
+        // Merge current data with previous order
+        $data = (array) $data;
+
+        foreach ($data as $name => $value)
+        {
+            $order[$name] = $value;
+        }
+
+        // Handle the order
 		$this->handleOrder($order);
 	}
 
@@ -108,6 +115,19 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 			$productSkus[] = $product->order_item_sku;
 		}
 
+        // Determine the order status
+        $orderStatus = null;
+
+        if (isset($order['order_status']))
+        {
+            $orderStatus = $order['order_status'];
+        }
+        elseif (isset($order['details']['BT']->order_status))
+        {
+            $orderStatus = $order['details']['BT']->order_status;
+        }
+
+        // Get the triggers
 		$triggers = $this->getTriggers(array('condition' => '%virtuemart3.product%'));
 
 		if (empty($triggers))
@@ -121,7 +141,6 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 			$condition = $trigger->condition;
 
 			$products = $condition['virtuemart3.product'];
-
 
 			if (empty($products))
 			{
@@ -148,7 +167,7 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 					continue;
 				}
 
-				if (!empty($statuses) && !in_array($order['details']['BT']->order_status, $statuses))
+				if (!empty($statuses) && !in_array($orderStatus, $statuses))
 				{
 					continue;
 				}
