@@ -104,6 +104,9 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 		$customVariables['products'] = $this->getProductsExtract($order);
 		$customVariables['order'] = $this->getOrderExtract($order);
 		$customVariables['customer'] = $this->getCustomerExtract($order);
+        //print_r($customVariables);
+        //print_r($order);
+        //exit;
 
 		// Gather the product IDs and SKUs
 		$productIds = array();
