@@ -67,13 +67,14 @@ class PlgEmailschedulerVirtuemart3 extends EmailschedulerPluginTrigger
 	 */
 	public function onEmailschedulerVirtuemart3Search($search = null, $ids = array(), $limit = 0)
 	{
+        $this->loadVirtueMart();
 		$db = JFactory::getDbo();
 
 		/** @var JDatabaseQuery $query */
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName(array('p.virtuemart_product_id', 'l.product_name')));
 		$query->from($db->quoteName('#__virtuemart_products', 'p'));
-		$query->leftJoin($db->quoteName('#__virtuemart_products_en_gb', 'l') . ' ON p.virtuemart_product_id = l.virtuemart_product_id');
+		$query->leftJoin($db->quoteName('#__virtuemart_products_'.VmConfig::$vmlang, 'l') . ' ON p.virtuemart_product_id = l.virtuemart_product_id');
 
 		if (!empty($search))
 		{
@@ -103,4 +104,29 @@ class PlgEmailschedulerVirtuemart3 extends EmailschedulerPluginTrigger
 
 		return $matches;
 	}
+
+    /**
+     * Load VirtueMart
+     */
+    public function loadVirtueMart()
+    {
+        if (!class_exists('VmConfig'))
+        {
+            $vmConfigFile = JPATH_ROOT . '/administrator/components/com_virtuemart/helpers/config.php';
+
+            if (file_exists($vmConfigFile))
+            {
+                defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+
+                include_once $vmConfigFile;
+
+                VmConfig::loadConfig();
+            }
+        }
+
+        if (class_exists('VmConfig'))
+        {
+            VmConfig::setdbLanguageTag();
+        }
+    }
 }
