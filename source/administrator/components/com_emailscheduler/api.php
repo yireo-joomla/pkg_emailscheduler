@@ -403,6 +403,7 @@ class Emailscheduler
 		$query->from($db->quoteName('#__emailscheduler_emails'));
 		$query->where($db->quoteName('send_date') . ' < NOW()');
 		$query->where($db->quoteName('send_state') . '=' . $db->quote('pending'));
+        $query->setLimit(100);
 
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
@@ -417,10 +418,9 @@ class Emailscheduler
 		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/tables/email.php';
 		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/models/email.php';
 
-		$model = new EmailschedulerModelEmail;
-
 		foreach ($rows as $row)
 		{
+		    $model = new EmailschedulerModelEmail;
 			$model->setId($row->id);
 			$model->send();
 		}
