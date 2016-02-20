@@ -401,7 +401,7 @@ class Emailscheduler
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__emailscheduler_emails'));
-		$query->where($db->quoteName('send_date') . ' < NOW()');
+		$query->where($db->quoteName('send_date') . ' < UTC_TIMESTAMP()');
 		$query->where($db->quoteName('send_state') . '=' . $db->quote('pending'));
         $query->setLimit(100);
 
