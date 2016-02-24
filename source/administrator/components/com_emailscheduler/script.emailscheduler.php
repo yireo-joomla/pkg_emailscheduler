@@ -30,7 +30,7 @@ class com_emailschedulerInstallerScript
 					foreach ($queries as $query)
 					{
 						$db->setQuery($query);
-						$db->query();
+						$db->execute();
 					}
 				}
 
@@ -57,7 +57,7 @@ class com_emailschedulerInstallerScript
 		{
 			$db->debug(0);
 			$db->setQuery($query);
-			$db->query();
+			$db->execute();
 		}
 	}
 }

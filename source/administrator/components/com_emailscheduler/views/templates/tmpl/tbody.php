@@ -2,10 +2,10 @@
 /**
  * Joomla! component Emailscheduler
  *
- * @author Yireo
+ * @author    Yireo
  * @copyright Copyright 2015
- * @license GNU Public License
- * @link http://www.yireo.com/
+ * @license   GNU Public License
+ * @link      http://www.yireo.com/
  */
 
 // Check to ensure this file is included in Joomla!
@@ -15,8 +15,8 @@ defined('_JEXEC') or die();
 $auto_columns = false;
 ?>
 <td>
-    <a href="<?php echo JRoute::_('index.php?option=com_emailscheduler&view=template&id='.$item->id); ?>"><?php echo $item->label; ?></a>
+	<a href="<?php echo JRoute::_('index.php?option=com_emailscheduler&view=template&id=' . $item->id); ?>"><?php echo $item->label; ?></a>
 </td>
 <td>
-    <?php echo $item->subject; ?>
+	<?php echo $item->subject; ?>
 </td>

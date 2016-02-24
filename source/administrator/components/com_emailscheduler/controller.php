@@ -30,6 +30,58 @@ class EmailschedulerController extends YireoController
 		parent::__construct();
 	}
 
+	public function store($post = null)
+	{
+		$this->storeFileUpload();
+		$rt = parent::store($post);
+
+		return $rt;
+	}
+
+	protected function storeFileUpload()
+	{
+		if (empty($_FILES['item']['name']['attachments']))
+		{
+			return false;
+		}
+
+		if (is_array($_FILES['item']['name']['attachments']))
+		{
+			$fileName = $_FILES['item']['name']['attachments'][0];
+			$fileTmpName = $_FILES['item']['tmp_name']['attachments'][0];
+			$fileError = $_FILES['item']['error']['attachments'][0];
+			$fileType = $_FILES['item']['type']['attachments'][0];
+			$fileSize = $_FILES['item']['size']['attachments'][0];
+		}
+		else
+		{
+			$fileName = $_FILES['item']['name']['attachments'];
+			$fileTmpName = $_FILES['item']['tmp_name']['attachments'];
+			$fileError = $_FILES['item']['error']['attachments'];
+			$fileType = $_FILES['item']['type']['attachments'];
+			$fileSize = $_FILES['item']['size']['attachments'];
+		}
+
+		if (!empty($fileError))
+		{
+			throw new Exception('File upload error: ' . $fileError);
+		}
+
+		$filePath = JPATH_SITE . '/images/emailscheduler';
+
+		if (!is_dir($filePath))
+		{
+			mkdir($filePath);
+		}
+
+		if (!is_dir($filePath))
+		{
+			throw new Exception('Failed to created upload folder: ' . $filePath);
+		}
+
+		JFile::move($fileTmpName, $filePath . '/' . $fileName);
+	}
+
 	/**
 	 * Method to send a specific mail
 	 */
@@ -99,8 +151,8 @@ class EmailschedulerController extends YireoController
 	 */
 	public function autocomplete()
 	{
-        ini_set('display_errors', 1);
-        error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+		ini_set('display_errors', 1);
+		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 
 		$plugin = $this->_app->input->getCmd('plugin');
 		$like = $this->_app->input->getString('like');
@@ -109,12 +161,15 @@ class EmailschedulerController extends YireoController
 		$event = 'onEmailscheduler' . ucfirst($plugin) . 'Search';
 		$dispatcher = JEventDispatcher::getInstance();
 
-        try {
-    		$matches = $dispatcher->trigger($event, array(&$like));
-        } catch(Exception $e)
-        {
-            echo $e->getMessage();exit;
-        }
+		try
+		{
+			$matches = $dispatcher->trigger($event, array(&$like));
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+			exit;
+		}
 
 		$results = array();
 

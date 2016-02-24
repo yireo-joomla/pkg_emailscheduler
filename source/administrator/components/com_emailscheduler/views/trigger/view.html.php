@@ -16,35 +16,34 @@ defined('_JEXEC') or die();
  */
 class EmailschedulerViewTrigger extends YireoViewForm
 {
-    /*
-     * Display method
-     *
-     * @param string $tpl
-     * @return null
-     */
+	/*
+	 * Display method
+	 *
+	 * @param string $tpl
+	 * @return null
+	 */
 	public function display($tpl = null)
 	{
-        YireoHelper::bootstrap();
+		YireoHelper::bootstrap();
 
-        $this->fetchItem();
+		$this->fetchItem();
 
-        $data = (array)$this->getModel()->getData();
-        $form = $this->getModel()->getForm();
-        
-        JPluginHelper::importPlugin('emailscheduler');
-        if(YireoHelper::isJoomla25()) {
-            $dispatcher = JDispatcher::getInstance();
-        } else {
-            $dispatcher = JEventDispatcher::getInstance();
-        }
-        $results = $dispatcher->trigger('onEmailschedulerTriggerPrepareForm', array(&$form, &$data));
+		$data = (array) $this->getModel()
+			->getData();
+		$form = $this->getModel()
+			->getForm();
 
-        $form->bind(array(
-            'item' => $data, 
-            'actions' => $data['actions'],
-            'condition' => $data['condition'],
-        ));
-        $this->assignRef('form', $form);
+		JPluginHelper::importPlugin('emailscheduler');
+
+		$dispatcher = JEventDispatcher::getInstance();
+
+		$results = $dispatcher->trigger('onEmailschedulerTriggerPrepareForm', array(&$form, &$data));
+
+		$form->bind(array(
+				'item' => $data,
+				'actions' => $data['actions'],
+				'condition' => $data['condition'],));
+		$this->assignRef('form', $form);
 
 		parent::display($tpl);
 	}

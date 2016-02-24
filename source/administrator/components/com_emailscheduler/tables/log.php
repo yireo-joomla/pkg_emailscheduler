@@ -12,20 +12,18 @@
 defined('_JEXEC') or die('Restricted access');
 
 /**
-* Log Table class
-*/
+ * Log Table class
+ */
 class TableLog extends YireoTable
 {
-    /**
-     * Constructor
-     *
-     * @access public
-     * @param JDatabase $db
-     * @return null
-     */
-    public function __construct(& $db)
-    {
-        // Call the constructor
-        parent::__construct('#__emailscheduler_logs', 'id', $db);
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param JDatabase $db
+	 */
+	public function __construct(& $db)
+	{
+		// Call the constructor
+		parent::__construct('#__emailscheduler_logs', 'id', $db);
+	}
 }

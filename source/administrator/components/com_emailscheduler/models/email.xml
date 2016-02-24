@@ -5,16 +5,17 @@
             <field name="subject" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_SUBJECT" class="input-xlarge inputbox" size="60" required="true" labelclass="control-label" />
             <field name="from" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_FROM" class="inputbox" size="60" required="true" labelclass="control-label" />
             <field name="to" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_TO" class="inputbox" size="60" required="true" labelclass="control-label" />
-        </fieldset>
-        <fieldset name="other" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_OTHER">
             <field name="cc" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_CC" class="inputbox" size="40" labelclass="control-label" />
             <field name="bcc" type="text" label="COM_EMAILSCHEDULER_FIELDNAME_BCC" class="inputbox" size="40" labelclass="control-label" />
+        </fieldset>
+        <fieldset name="other" label="COM_EMAILSCHEDULER_ITEM_FIELDSET_OTHER">
             <field name="send_date" type="calendar" filter="no" label="COM_EMAILSCHEDULER_FIELDNAME_SEND_DATE" class="inputbox" size="40" labelclass="control-label" />
             <field name="send_time" type="time" filter="no" label="COM_EMAILSCHEDULER_FIELDNAME_SEND_TIME" class="inputbox" size="40" labelclass="control-label" />
             <field name="template_id" type="sql" label="COM_EMAILSCHEDULER_FIELDNAME_TEMPLATE" value_field="label" key_field="value"
                 query="SELECT `label`, id AS value FROM #__emailscheduler_templates">
                 <option value="">JNONE</option>
             </field>
+            <field name="attachments" type="file" label="COM_EMAILSCHEDULER_FIELDNAME_ATTACHMENTS" class="inputbox" size="40" labelclass="control-label" />
             <field name="send_state" type="list" label="COM_EMAILSCHEDULER_FIELDNAME_SEND_STATE" class="inputbox" labelclass="control-label">
                 <option value="pending">COM_EMAILSCHEDULER_STATE_PENDING</option>
                 <option value="sent">COM_EMAILSCHEDULER_STATE_SENT</option>

@@ -12,26 +12,23 @@
 defined('_JEXEC') or die('Restricted access');
 
 /**
-* Template Table class
-*/
+ * Template Table class
+ */
 class TableTemplate extends YireoTable
 {
-    /**
-     * Constructor
-     *
-     * @access public
-     * @param JDatabase $db
-     * @return null
-     */
-    public function __construct(& $db)
-    {
-        // Set the required fields
-        $this->_required = array(
-            'label',
-            'body',
-        );
+	/**
+	 * Constructor
+	 *
+	 * @param JDatabase $db
+	 */
+	public function __construct(& $db)
+	{
+		// Set the required fields
+		$this->_required = array(
+			'label',
+			'body',);
 
-        // Call the constructor
-        parent::__construct('#__emailscheduler_templates', 'id', $db);
-    }
+		// Call the constructor
+		parent::__construct('#__emailscheduler_templates', 'id', $db);
+	}
 }

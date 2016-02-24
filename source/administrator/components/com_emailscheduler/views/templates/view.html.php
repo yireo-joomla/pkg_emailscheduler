@@ -16,15 +16,14 @@ defined('_JEXEC') or die();
  */
 class EmailschedulerViewTemplates extends YireoViewList
 {
-    /*
-     * Display method
-     *
-     * @param string $tpl
-     * @return null
-     */
-    public function display($tpl = null)
-    {
-        parent::display($tpl);
-    }
+	/*
+	 * Display method
+	 *
+	 * @param string $tpl
+	 */
+	public function display($tpl = null)
+	{
+		parent::display($tpl);
+	}
 }
 

@@ -14,38 +14,39 @@ defined('_JEXEC') or die();
 /*
  * Emailscheduler Emails model
  */
+
 class EmailschedulerModelEmails extends YireoModel
 {
-    /**
-     * Constructor method
-     *
-     * @access public
-     * @param null
-     * @return null
-     */
-    public function __construct()
-    {
-        parent::__construct('email');
+	/**
+	 * Constructor method
+	 */
+	public function __construct()
+	{
+		parent::__construct('email');
 
-        $send_state = $this->getFilter('send_state');
-        if(!empty($send_state)) {
-            $db = JFactory::getDBO();
-            $this->addWhere($db->quoteName('send_state') . '=' . $db->quote($send_state));
-        }
+		$send_state = $this->getFilter('send_state');
 
-        $this->_search = array('subject', 'to', 'cc', 'bcc');
-        $this->_orderby_default = 'send_date';
-    }
+		if (!empty($send_state))
+		{
+			$db = JFactory::getDBO();
+			$this->addWhere($db->quoteName('send_state') . '=' . $db->quote($send_state));
+		}
 
-    /**
-     * Method to modify the data once it is loaded
-     *
-     * @access protected
-     * @param array $data
-     * @return array
-     */
-    protected function onDataLoad($data)
-    {
-        return $data;
-    }
+		$this->_search = array('subject', 'to', 'cc', 'bcc');
+		$this->_orderby_default = 'send_date';
+	}
+
+	/**
+	 * Method to modify the data once it is loaded
+	 *
+	 * @access protected
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	protected function onDataLoad($data)
+	{
+		return $data;
+	}
 }
