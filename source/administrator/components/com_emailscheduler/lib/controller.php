@@ -21,19 +21,8 @@ require_once dirname(__FILE__) . '/loader.php';
  *
  * @package Yireo
  */
-if (YireoHelper::isJoomla25())
+class YireoAbstractController extends JControllerLegacy
 {
-	jimport('joomla.application.component.controller');
-
-	class YireoAbstractController extends JController
-	{
-	}
-}
-else
-{
-	class YireoAbstractController extends JControllerLegacy
-	{
-	}
 }
 
 /**
@@ -60,12 +49,6 @@ class YireoCommonController extends YireoAbstractController
 
 	/**
 	 * Constructor
-	 *
-	 * @subpackage Yireo
-	 *
-	 * @param null
-	 *
-	 * @return null
 	 */
 	public function __construct()
 	{
@@ -94,6 +77,13 @@ class YireoCommonController extends YireoAbstractController
 		parent::__construct();
 	}
 
+	/**
+	 * @param $option
+	 * @param $name
+	 *
+	 * @return mixed
+	 * @throws Exception
+	 */
 	static public function getControllerInstance($option, $name)
 	{
 		// Check for a child controller
@@ -114,6 +104,13 @@ class YireoCommonController extends YireoAbstractController
 		return self::getDefaultControllerInstance($option, $name);
 	}
 
+	/**
+	 * @param $option
+	 * @param $name
+	 *
+	 * @return mixed
+	 * @throws Exception
+	 */
 	static public function getDefaultControllerInstance($option, $name)
 	{
 		// Require the base controller
@@ -220,7 +217,6 @@ class YireoController extends YireoCommonController
 	/**
 	 * Constructor
 	 *
-	 * @access     public
 	 * @subpackage Yireo
 	 *
 	 * @param null
@@ -345,6 +341,25 @@ class YireoController extends YireoCommonController
 	}
 
 	/**
+	 * Load the POST data
+	 */
+	public function loadPost()
+	{
+		$inputPost = $this->_jinput->post;
+
+		if (YireoHelper::compareJoomlaVersion('3.2.0', 'gt'))
+		{
+			$post = $inputPost->getArray();
+		}
+		else
+		{
+			$post = $this->_app->input->getArray($_POST);
+		}
+
+		return $post;
+	}
+
+	/**
 	 * Handle the task 'store'
 	 *
 	 * @access     public
@@ -362,17 +377,10 @@ class YireoController extends YireoCommonController
 		// Fetch the POST-data
 		if (empty($post))
 		{
-			$inputPost = $this->_jinput->post;
-
-			if (YireoHelper::compareJoomlaVersion('3.2.0', 'gt'))
-			{
-				$post = $inputPost->getArray();
-			}
-			else
-			{
-				$post = $this->_app->input->getArray($_POST);
-			}
+			$post = $this->loadPost();
 		}
+
+		//print_r($post);exit;
 
 		// Fetch the ID
 		$post['id'] = $this->getId();
@@ -997,7 +1005,7 @@ class YireoController extends YireoCommonController
 	 *
 	 * @param null
 	 *
-	 * @return JModel
+	 * @return YireoModel
 	 */
 	protected function _loadModel()
 	{
