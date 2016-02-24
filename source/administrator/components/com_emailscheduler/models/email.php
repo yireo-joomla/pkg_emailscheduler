@@ -280,7 +280,17 @@ class EmailschedulerModelEmail extends YireoModel
 			{
 				$attachment = trim($attachment);
 
-				if (!file_exists($attachment))
+				if (!file_exists($attachment) && file_exists(JPATH_SITE . '/images/emailscheduler/' . $attachment))
+				{
+					$attachment = JPATH_SITE . '/images/emailscheduler/' . $attachment;
+				}
+
+				if (!file_exists($attachment) && file_exists(JPATH_SITE . '/images/' . $attachment))
+				{
+					$attachment = JPATH_SITE . '/images/' . $attachment;
+				}
+
+				if (!file_exists($attachment) && file_exists(JPATH_SITE . '/' . $attachment))
 				{
 					$attachment = JPATH_SITE . '/' . $attachment;
 				}
@@ -627,6 +637,11 @@ class EmailschedulerModelEmail extends YireoModel
 		{
 			$data->variables = unserialize($data->variables);
 		}
+
+		/*if (!empty($data->attachments))
+		{
+			$data->attachments = 'images/emailscheduler/' . $data->attachments;
+		}*/
 
 		return $data;
 	}

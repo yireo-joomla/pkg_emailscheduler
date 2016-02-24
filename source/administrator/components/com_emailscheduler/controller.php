@@ -27,17 +27,35 @@ class EmailschedulerController extends YireoController
 		$this->_allow_raw[] = 'body_html';
 		$this->_allow_raw[] = 'body';
 
+		$this->app = JFactory::getApplication();
+
 		parent::__construct();
 	}
 
+	/**
+	 * @param $post
+	 *
+	 * @return mixed
+	 */
 	public function store($post = null)
 	{
-		$this->storeFileUpload();
+		$fileName = $this->storeFileUpload();
+		$post = $this->loadPost();
+
+		if (!empty($fileName))
+		{
+			$post['item']['attachments'] = $fileName;
+		}
+
 		$rt = parent::store($post);
 
 		return $rt;
 	}
 
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
 	protected function storeFileUpload()
 	{
 		if (empty($_FILES['item']['name']['attachments']))
@@ -67,6 +85,16 @@ class EmailschedulerController extends YireoController
 			throw new Exception('File upload error: ' . $fileError);
 		}
 
+		if (empty($fileType))
+		{
+			throw new Exception('File upload error: Unknown file type');
+		}
+
+		if ($fileSize == 0)
+		{
+			throw new Exception('File upload error: Empty file size');
+		}
+
 		$filePath = JPATH_SITE . '/images/emailscheduler';
 
 		if (!is_dir($filePath))
@@ -80,6 +108,8 @@ class EmailschedulerController extends YireoController
 		}
 
 		JFile::move($fileTmpName, $filePath . '/' . $fileName);
+
+		return $fileName;
 	}
 
 	/**
