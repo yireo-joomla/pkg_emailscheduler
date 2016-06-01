@@ -16,17 +16,18 @@ defined('_JEXEC') or die();
  */
 class EmailschedulerViewLogs extends YireoViewList
 {
-	/*
-	 * Display method
-	 *
-	 * @param string $tpl
-	 */
-	public function display($tpl = null)
-	{
-		// Add clean-button to toolbar
-		JToolBarHelper::custom('deleteSent', 'delete.png', 'delete.png', 'Clean sent', false);
+    /*
+     * Display method
+     *
+     * @param string $tpl
+     * @return null
+     */
+    public function display($tpl = null)
+    {
+        // Add clean-button to toolbar
+        JToolBarHelper::custom('deleteSent','delete.png','delete.png', 'Clean sent', false);
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }
 

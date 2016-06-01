@@ -8,29 +8,27 @@
  * @link http://www.yireo.com
  */
 
-// Check to ensure this file is included in Joomla!
+// Check to ensure this file is included in Joomla
 defined('_JEXEC') or die();
 
-/*
- * Emailscheduler Trigger model
+/**
+ * Class EmailschedulerModelTrigger
  */
-
 class EmailschedulerModelTrigger extends YireoModel
 {
 	/**
 	 * Constructor method
-	 *
-	 * @access public
-	 *
-	 * @param null
-	 *
-	 * @return null
 	 */
 	public function __construct()
 	{
 		parent::__construct('trigger');
 	}
 
+	/**
+	 * @param $data
+	 *
+	 * @return mixed
+	 */
 	public function onDataLoad($data)
 	{
 		if (is_string($data->actions))
@@ -48,9 +46,6 @@ class EmailschedulerModelTrigger extends YireoModel
 
 	/**
 	 * Method to store the model
-	 *
-	 * @access     public
-	 * @subpackage Yireo
 	 *
 	 * @param mixed $data
 	 *

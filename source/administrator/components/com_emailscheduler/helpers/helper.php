@@ -11,13 +11,17 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+/**
+ * Class EmailschedulerHelper
+ */
 class EmailschedulerHelper
 {
-	/*
+	/**
 	 * Fetch a list of accounts
 	 *
-	 * @param string $tpl
-	 * @return null
+	 * @param bool $include_null
+	 *
+	 * @return array
 	 */
 	static public function getSendStateOptions($include_null = false)
 	{
@@ -26,7 +30,8 @@ class EmailschedulerHelper
 			array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PENDING'), 'value' => 'pending'),
 			array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PROCESSING'), 'value' => 'processing'),
 			array('title' => JText::_('COM_EMAILSCHEDULER_STATE_FAILED'), 'value' => 'failed'),
-			array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PAUSED'), 'value' => 'paused'),);
+			array('title' => JText::_('COM_EMAILSCHEDULER_STATE_PAUSED'), 'value' => 'paused'),
+		);
 
 		if ($include_null)
 		{
@@ -37,10 +42,12 @@ class EmailschedulerHelper
 		return $rows;
 	}
 
-	/*
+	/**
 	 * Method to return the extra seconds for a specific string
 	 *
-	 * @param mixed $timestring
+	 * @param mixed $current_time
+	 * @param mixed $reschedule_time
+	 *
 	 * @return string
 	 */
 	static public function getRescheduleTime($current_time, $reschedule_time)
@@ -55,28 +62,30 @@ class EmailschedulerHelper
 		return $current_time;
 	}
 
-	/*
+	/**
 	 * Method to format the time
 	 *
-	 * @param mixed $timestring
+	 * @param mixed $time
+	 *
 	 * @return string
 	 */
 	static public function formatTime($time)
 	{
 		$timestamp = strtotime($time);
-		$seconds = $timestamp - time();
+		$seconds   = $timestamp - time();
 
 		$time_string = null;
 
 		if ($seconds == 0)
 		{
-			$time_string = 'now';
+			return 'now';
 		}
-		elseif ($seconds > 0)
+
+		if ($seconds > 0)
 		{
 			$minutes = round($seconds / 60);
-			$hours = round($seconds / 60 / 60);
-			$days = round($seconds / 60 / 60 / 24);
+			$hours   = round($seconds / 60 / 60);
+			$days    = round($seconds / 60 / 60 / 24);
 
 			if ($minutes < 2)
 			{
@@ -102,42 +111,47 @@ class EmailschedulerHelper
 			{
 				$time_string = $days . ' days';
 			}
+
+			return $time_string;
+		}
+
+		$minutes = round((0 - $seconds) / 60);
+		$hours   = round((0 - $seconds) / 60 / 60);
+		$days    = round((0 - $seconds) / 60 / 60 / 24);
+
+		if ($minutes < 2)
+		{
+			$time_string = $minutes . ' minute ago';
+		}
+		elseif ($minutes < 60)
+		{
+			$time_string = $minutes . ' minutes ago';
+		}
+		elseif ($hours == 1)
+		{
+			$time_string = $hours . ' hour ago';
+		}
+		elseif ($hours < 24)
+		{
+			$time_string = $hours . ' hours ago';
+		}
+		elseif ($days == 1)
+		{
+			$time_string = $days . ' day ago';
 		}
 		else
 		{
-			$minutes = round((0 - $seconds) / 60);
-			$hours = round((0 - $seconds) / 60 / 60);
-			$days = round((0 - $seconds) / 60 / 60 / 24);
-
-			if ($minutes < 2)
-			{
-				$time_string = $minutes . ' minute ago';
-			}
-			elseif ($minutes < 60)
-			{
-				$time_string = $minutes . ' minutes ago';
-			}
-			elseif ($hours == 1)
-			{
-				$time_string = $hours . ' hour ago';
-			}
-			elseif ($hours < 24)
-			{
-				$time_string = $hours . ' hours ago';
-			}
-			elseif ($days == 1)
-			{
-				$time_string = $days . ' day ago';
-			}
-			else
-			{
-				$time_string = $days . ' days ago';
-			}
+			$time_string = $days . ' days ago';
 		}
-
+		
 		return $time_string;
 	}
 
+	/**
+	 * @param $email
+	 *
+	 * @return bool|JUser
+	 */
 	static public function loadByEmail($email)
 	{
 		// Abort if the email is not set
@@ -149,8 +163,8 @@ class EmailschedulerHelper
 		}
 
 		// Fetch the user-record for this email-address
-		$db = JFactory::getDBO();
-		$query = "SELECT id FROM #__users WHERE `email` = " . $db->Quote($email);
+		$db    = JFactory::getDbo();
+		$query = "SELECT id FROM #__users WHERE `email` = " . $db->quote($email);
 		$db->setQuery($query);
 		$row = $db->loadObject();
 
@@ -162,8 +176,7 @@ class EmailschedulerHelper
 
 		// Load the user by its user-ID
 		$user_id = $row->id;
-		$user = JFactory::getUser($user_id);
-
+		$user    = JFactory::getUser($user_id);
 		if ($user == false || empty($user->id))
 		{
 			return false;
@@ -175,15 +188,11 @@ class EmailschedulerHelper
 	/**
 	 * Method to get a frontend link
 	 *
-	 * @access protected
-	 *
 	 * @param string $route
-	 *
-	 * @return null
 	 */
 	static public function getFrontendUrl($route)
 	{
-		$app = JApplication::getInstance('site');
+		$app    = JApplication::getInstance('site');
 		$router = $app->getRouter();
 
 		if (!$router)
@@ -199,9 +208,9 @@ class EmailschedulerHelper
 		$url = str_replace('/administrator', '', $url);
 
 		// Spoof the frontend
-		$root = substr(JURI::root(), 0, -1);
+		$root = substr(JUri::root(), 0, -1);
 		$root = str_replace('/administrator', '', $root);
-		$url = $root . $url;
+		$url  = $root . $url;
 
 		return $url;
 	}

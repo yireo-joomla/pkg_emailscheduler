@@ -43,15 +43,14 @@ class EmailschedulerFormFieldTypeahead extends JFormField
 		// Tags field ajax
 		$chosenAjaxSettings = new Registry(
 			array(
-				'selector' => $selector,
-				'type' => 'GET',
-				'url' => $ajaxLink,
-				'dataType' => 'json',
-				'jsonTermKey' => 'like',
-				'minTermLength' => $minTermLength,
+				'selector'      => $selector,
+				'type'          => 'GET',
+				'url'           => $ajaxLink,
+				'dataType'      => 'json',
+				'jsonTermKey'   => 'like',
+				'minTermLength' => $minTermLength
 			)
 		);
-
 		JHtml::_('formbehavior.ajaxchosen', $chosenAjaxSettings);
 
 		$attr = '';

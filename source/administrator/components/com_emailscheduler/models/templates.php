@@ -8,13 +8,12 @@
  * @link http://www.yireo.com
  */
 
-// Check to ensure this file is included in Joomla!  
+// Check to ensure this file is included in Joomla
 defined('_JEXEC') or die();
 
-/*
- * Emailscheduler Templates model
+/**
+ * Class EmailschedulerModelTemplates
  */
-
 class EmailschedulerModelTemplates extends YireoModel
 {
 	/**

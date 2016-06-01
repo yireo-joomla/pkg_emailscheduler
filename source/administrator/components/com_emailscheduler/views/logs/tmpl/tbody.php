@@ -2,10 +2,10 @@
 /**
  * Joomla! component Emailscheduler
  *
- * @author    Yireo
+ * @author Yireo
  * @copyright Copyright 2015
- * @license   GNU Public License
- * @link      http://www.yireo.com/
+ * @license GNU Public License
+ * @link http://www.yireo.com/
  */
 
 // Check to ensure this file is included in Joomla!
@@ -15,15 +15,15 @@ defined('_JEXEC') or die();
 $auto_columns = false;
 ?>
 <td>
-	<?php echo $item->subject; ?>
+    <?php echo $item->subject; ?>
 </td>
 <td>
-	<?php echo $item->to; ?>
+    <?php echo $item->to; ?>
 </td>
 <td>
-	<?php echo $item->send_date; ?>
-	(<?php echo EmailschedulerHelper::formatTime($item->send_date); ?>)
+    <?php echo $item->send_date; ?>
+    (<?php echo EmailschedulerHelper::formatTime($item->send_date); ?>)
 </td>
 <td>
-	<?php echo JText::_('COM_EMAILSCHEDULER_STATE_' . $item->send_state); ?>
+    <?php echo JText::_('COM_EMAILSCHEDULER_STATE_'.$item->send_state); ?>
 </td>

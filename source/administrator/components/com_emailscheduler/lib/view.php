@@ -24,8 +24,19 @@ require_once dirname(__FILE__) . '/loader.php';
  *
  * @package Yireo
  */
-class YireoAbstractView extends JViewLegacy
+if (YireoHelper::isJoomla25())
 {
+	jimport('joomla.application.component.view');
+
+	class YireoAbstractView extends JView
+	{
+	}
+}
+else
+{
+	class YireoAbstractView extends JViewLegacy
+	{
+	}
 }
 
 /**

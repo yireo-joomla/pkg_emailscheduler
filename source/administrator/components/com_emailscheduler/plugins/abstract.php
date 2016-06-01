@@ -36,6 +36,8 @@ class EmailschedulerPluginAbstract extends JPlugin
 	 *
 	 * @param   string $message  Message to log
 	 * @param   string $variable Variable to dump
+	 *
+	 * @return null
 	 */
 	protected function log($message, $variable = null)
 	{

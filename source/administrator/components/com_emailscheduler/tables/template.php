@@ -26,7 +26,8 @@ class TableTemplate extends YireoTable
 		// Set the required fields
 		$this->_required = array(
 			'label',
-			'body',);
+			'body',
+		);
 
 		// Call the constructor
 		parent::__construct('#__emailscheduler_templates', 'id', $db);

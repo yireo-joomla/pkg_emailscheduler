@@ -33,7 +33,7 @@ class Emailscheduler
 	 * @param mixed  $from
 	 * @param mixed  $attachments
 	 * @param int    $send_date
-	 * @param array	 $variables
+	 * @param array  $variables
 	 *
 	 * @return $this
 	 */
@@ -100,7 +100,7 @@ class Emailscheduler
 		if (empty($from))
 		{
 			$config = JFactory::getConfig();
-			$from = $config->get('mailfrom');
+			$from   = $config->get('mailfrom');
 		}
 
 		$this->data['from'] = $from;
@@ -266,8 +266,8 @@ class Emailscheduler
 		}
 		elseif (is_array($recipients))
 		{
-			$to = array();
-			$cc = array();
+			$to  = array();
+			$cc  = array();
 			$bcc = array();
 
 			foreach ($recipients as $recipientIndex => $recipient)
@@ -299,8 +299,8 @@ class Emailscheduler
 				}
 			}
 
-			$this->data['to'] = implode(',', $to);
-			$this->data['cc'] = implode(',', $cc);
+			$this->data['to']  = implode(',', $to);
+			$this->data['cc']  = implode(',', $cc);
 			$this->data['bcc'] = implode(',', $bcc);
 		}
 
@@ -345,7 +345,7 @@ class Emailscheduler
 		require_once JPATH_ADMINISTRATOR . '/components/com_emailscheduler/models/email.php';
 
 		$model = new EmailschedulerModelEmail;
-		$rt = $model->store($this->data);
+		$rt    = $model->store($this->data);
 
 		return $rt;
 	}
@@ -397,13 +397,13 @@ class Emailscheduler
 	{
 		ini_set('display_errors', 1);
 
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__emailscheduler_emails'));
 		$query->where($db->quoteName('send_date') . ' < UTC_TIMESTAMP()');
 		$query->where($db->quoteName('send_state') . '=' . $db->quote('pending'));
-        $query->setLimit(100);
+		$query->setLimit(100);
 
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
@@ -420,7 +420,7 @@ class Emailscheduler
 
 		foreach ($rows as $row)
 		{
-		    $model = new EmailschedulerModelEmail;
+			$model = new EmailschedulerModelEmail;
 			$model->setId($row->id);
 			$model->send();
 		}

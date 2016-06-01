@@ -11,10 +11,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-/*
- * Emailscheduler Email model
+/**
+ * Class EmailschedulerModelEmail
  */
-
 class EmailschedulerModelEmail extends YireoModel
 {
 	/**
@@ -31,8 +30,6 @@ class EmailschedulerModelEmail extends YireoModel
 
 	/**
 	 * Constructor method
-	 *
-	 * @param null
 	 */
 	public function __construct()
 	{
@@ -68,7 +65,7 @@ class EmailschedulerModelEmail extends YireoModel
 			return false;
 		}
 
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__emailscheduler_emails'));
@@ -103,7 +100,7 @@ class EmailschedulerModelEmail extends YireoModel
 			return false;
 		}
 
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__emailscheduler_emails'));
@@ -280,17 +277,7 @@ class EmailschedulerModelEmail extends YireoModel
 			{
 				$attachment = trim($attachment);
 
-				if (!file_exists($attachment) && file_exists(JPATH_SITE . '/images/emailscheduler/' . $attachment))
-				{
-					$attachment = JPATH_SITE . '/images/emailscheduler/' . $attachment;
-				}
-
-				if (!file_exists($attachment) && file_exists(JPATH_SITE . '/images/' . $attachment))
-				{
-					$attachment = JPATH_SITE . '/images/' . $attachment;
-				}
-
-				if (!file_exists($attachment) && file_exists(JPATH_SITE . '/' . $attachment))
+				if (!file_exists($attachment))
 				{
 					$attachment = JPATH_SITE . '/' . $attachment;
 				}
@@ -311,7 +298,7 @@ class EmailschedulerModelEmail extends YireoModel
 	public function send()
 	{
 		// Get the data
-		$data = (object) $this->getData(true);
+		$data     = (object) $this->getData(true);
 		$mailData = clone $data;
 
 		// Recheck the status
@@ -430,8 +417,8 @@ class EmailschedulerModelEmail extends YireoModel
 		}
 
 		// Construct variables
-		$templateVariables = array();
-		$templateVariables['email'] = $mailData->to;
+		$templateVariables            = array();
+		$templateVariables['email']   = $mailData->to;
 		$templateVariables['subject'] = $mailData->subject;
 
 		// Replace user-variables
@@ -440,12 +427,12 @@ class EmailschedulerModelEmail extends YireoModel
 		if (is_object($user))
 		{
 			$templateVariables['username'] = $user->username;
-			$templateVariables['name'] = $user->name;
+			$templateVariables['name']     = $user->name;
 		}
 		else
 		{
 			$templateVariables['username'] = null;
-			$templateVariables['name'] = null;
+			$templateVariables['name']     = null;
 		}
 
 		// Add variables
@@ -478,7 +465,7 @@ class EmailschedulerModelEmail extends YireoModel
 
 			$mailData->body_html = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->body_html);
 			$mailData->body_text = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->body_text);
-			$mailData->subject = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->subject);
+			$mailData->subject   = str_ireplace('{' . $variableName . '}', $variableValue, $mailData->subject);
 		}
 	}
 
@@ -486,7 +473,7 @@ class EmailschedulerModelEmail extends YireoModel
 	 * Method to use Twig to parse a text
 	 *
 	 * @param string $text
-	 * @param array $variables
+	 * @param array  $variables
 	 */
 	public function parseViaTwig(&$text, $variables)
 	{
@@ -531,8 +518,8 @@ class EmailschedulerModelEmail extends YireoModel
 		{
 			foreach ($matches[0] as $matchIndex => $match)
 			{
-				$link = 'index.php?option=com_' . $matches[2][$matchIndex];
-				$sefLink = EmailschedulerHelper::getFrontendUrl($link);
+				$link      = 'index.php?option=com_' . $matches[2][$matchIndex];
+				$sefLink   = EmailschedulerHelper::getFrontendUrl($link);
 				$body_html = str_replace($link, $sefLink, $body_html);
 			}
 		}
@@ -593,16 +580,16 @@ class EmailschedulerModelEmail extends YireoModel
 		// Handle send response
 		if ($rt == true)
 		{
-			$logData['message'] = (!empty($mailer->message)) ? $mailer->message : null;
+			$logData['message']    = (!empty($mailer->message)) ? $mailer->message : null;
 			$logData['send_state'] = self::SEND_STATE_SENT;
-			$data->send_state = $logData['send_state'];
-			$data->send_date = $logData['send_state'];
+			$data->send_state      = $logData['send_state'];
+			$data->send_date       = $logData['send_state'];
 		}
 		else
 		{
-			$logData['message'] = (!empty($mailer->message)) ? $mailer->message : null;
+			$logData['message']    = (!empty($mailer->message)) ? $mailer->message : null;
 			$logData['send_state'] = self::SEND_STATE_FAILED;
-			$data->send_state = $logData['send_state'];
+			$data->send_state      = $logData['send_state'];
 		}
 
 		// Save logdata
@@ -627,7 +614,7 @@ class EmailschedulerModelEmail extends YireoModel
 
 		if (empty($send_date))
 		{
-			$send_date = time() + 5 * 60;
+			$send_date       = time() + 5 * 60;
 			$data->send_date = date('Y-m-d H:i:s', $send_date);
 		}
 
@@ -637,11 +624,6 @@ class EmailschedulerModelEmail extends YireoModel
 		{
 			$data->variables = unserialize($data->variables);
 		}
-
-		/*if (!empty($data->attachments))
-		{
-			$data->attachments = 'images/emailscheduler/' . $data->attachments;
-		}*/
 
 		return $data;
 	}

@@ -71,20 +71,7 @@ class TableEmail extends YireoTable
 		// Generate a message_id if it does not exist
 		if (empty($data['message_id']))
 		{
-            $hash = $data['subject'];
-            $hash .= $data['to'];
-
-            if(!empty($data['cc']))
-            {
-                $hash .= $data['cc'];
-            }
-
-            if(!empty($data['bcc']))
-            {
-                $hash .= $data['bcc'];
-            }
-
-			$data['message_id'] = md5($hash);
+			$data['message_id'] = md5($data['subject'] . $data['to']);
 		}
 
 		// Lookup the ID based upon the message_id

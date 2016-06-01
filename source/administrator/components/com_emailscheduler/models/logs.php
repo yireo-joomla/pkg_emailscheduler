@@ -8,13 +8,12 @@
  * @link http://www.yireo.com
  */
 
-// Check to ensure this file is included in Joomla!  
+// Check to ensure this file is included in Joomla
 defined('_JEXEC') or die();
 
-/*
- * Emailscheduler Logs model
+/**
+ * Class EmailschedulerModelLogs
  */
-
 class EmailschedulerModelLogs extends YireoModel
 {
 	/**
@@ -24,14 +23,14 @@ class EmailschedulerModelLogs extends YireoModel
 	{
 		parent::__construct('log');
 
-		$this->_search = array('email.subject', 'email.from', 'email.to', 'email.cc', 'email.bcc');
+		$this->_search          = array('email.subject', 'email.from', 'email.to', 'email.cc', 'email.bcc');
 		$this->_orderby_default = 'email_id';
 	}
 
 	/**
 	 * Method to build the database query
 	 *
-	 * @param string $query
+	 * @param null
 	 *
 	 * @return mixed
 	 */
@@ -41,5 +40,17 @@ class EmailschedulerModelLogs extends YireoModel
 		$query .= " LEFT JOIN #__emailscheduler_emails AS email ON email.id = log.email_id \n";
 
 		return parent::buildQuery($query);
+	}
+
+	/**
+	 * Method to modify the data once it is loaded
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	protected function onDataLoad($data)
+	{
+		return $data;
 	}
 }

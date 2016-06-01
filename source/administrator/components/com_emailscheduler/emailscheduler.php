@@ -19,17 +19,17 @@ require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/helper.php';
 
 // Make sure the user is authorised to view this page
 $application = JFactory::getApplication();
-$user = JFactory::getUser();
+$user        = JFactory::getUser();
 
 // Require the current controller
-$view = $application->input->getCmd('view');
+$view            = $application->input->getCmd('view');
 $controller_file = JPATH_COMPONENT . '/controllers/' . $view . '.php';
 
 if (is_file($controller_file))
 {
 	require_once $controller_file;
 	$controller_name = 'EmailschedulerController' . ucfirst($view);
-	$controller = new $controller_name;
+	$controller      = new $controller_name;
 }
 else
 {

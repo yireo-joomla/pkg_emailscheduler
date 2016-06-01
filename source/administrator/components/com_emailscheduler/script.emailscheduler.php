@@ -12,17 +12,21 @@
 // Check to ensure this file is included in Joomla!  
 defined('_JEXEC') or die();
 
+/**
+ * Class com_emailschedulerInstallerScript
+ */
 class com_emailschedulerInstallerScript
 {
 	public function postflight($action, $installer)
 	{
+		$db = JFactory::getDbo();
+
 		switch ($action)
 		{
 			case 'install':
 			case 'update':
 
 				// Perform extra queries
-				$db = JFactory::getDBO();
 				$queries = array();
 
 				if (!empty($queries))
@@ -30,7 +34,7 @@ class com_emailschedulerInstallerScript
 					foreach ($queries as $query)
 					{
 						$db->setQuery($query);
-						$db->execute();
+						$db->query();
 					}
 				}
 
@@ -51,13 +55,11 @@ class com_emailschedulerInstallerScript
 		$update_queries = array();
 
 		// Perform all queries - we don't care if it fails
-		$db = JFactory::getDBO();
-
 		foreach ($update_queries as $query)
 		{
 			$db->debug(0);
 			$db->setQuery($query);
-			$db->execute();
+			$db->query();
 		}
 	}
 }

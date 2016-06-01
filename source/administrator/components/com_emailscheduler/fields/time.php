@@ -2,10 +2,10 @@
 /**
  * Joomla! component Emailscheduler
  *
- * @author    Yireo (info@yireo.com)
+ * @author Yireo (info@yireo.com)
  * @copyright Copyright 2015
- * @license   GNU Public License
- * @link      http://www.yireo.com
+ * @license GNU Public License
+ * @link http://www.yireo.com
  */
 
 defined('JPATH_BASE') or die;
@@ -15,14 +15,14 @@ defined('JPATH_BASE') or die;
  */
 class JFormFieldTime extends JFormField
 {
-	protected $type = 'Time';
+    protected $type = 'Time';
 
-	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return    string    The field input markup.
-	 */
-	protected function getInput()
-	{
-	}
+    /**
+     * Method to get the field input markup.
+     *
+     * @return    string    The field input markup.
+     */
+    protected function getInput()
+    {
+    }
 }

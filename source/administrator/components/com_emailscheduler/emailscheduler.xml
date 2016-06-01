@@ -7,7 +7,7 @@
     <creationDate>February 2016</creationDate>
     <copyright>Copyright 2015 Yireo.com. All rights reserved.</copyright>
     <license>http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL</license>
-    <version>0.3.4</version>
+    <version>0.3.3</version>
     <description>COM_EMAILSCHEDULER_DESC</description>
 
     <!-- installation part -->
@@ -79,6 +79,6 @@
     </media>
 
     <updateservers>
-        <server type="extension" priority="1" name="com_emailscheduler">http://www.yireo.com/updates/com_emailscheduler.xml</server>
+        <server type="extension" priority="1" name="com_emailscheduler">https://www.yireo.com/updates/com_emailscheduler.xml</server>
     </updateservers>
 </extension>

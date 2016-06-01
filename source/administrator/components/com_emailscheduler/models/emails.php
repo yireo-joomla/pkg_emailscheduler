@@ -11,10 +11,9 @@
 // Check to ensure this file is included in Joomla!  
 defined('_JEXEC') or die();
 
-/*
- * Emailscheduler Emails model
+/**
+ * Class EmailschedulerModelEmails
  */
-
 class EmailschedulerModelEmails extends YireoModel
 {
 	/**
@@ -25,21 +24,19 @@ class EmailschedulerModelEmails extends YireoModel
 		parent::__construct('email');
 
 		$send_state = $this->getFilter('send_state');
-
+		
 		if (!empty($send_state))
 		{
-			$db = JFactory::getDBO();
+			$db = JFactory::getDbo();
 			$this->addWhere($db->quoteName('send_state') . '=' . $db->quote($send_state));
 		}
 
-		$this->_search = array('subject', 'to', 'cc', 'bcc');
+		$this->_search          = array('subject', 'to', 'cc', 'bcc');
 		$this->_orderby_default = 'send_date';
 	}
 
 	/**
 	 * Method to modify the data once it is loaded
-	 *
-	 * @access protected
 	 *
 	 * @param array $data
 	 *

@@ -8,13 +8,12 @@
  * @link http://www.yireo.com
  */
 
-// Check to ensure this file is included in Joomla!  
+// Check to ensure this file is included in Joomla
 defined('_JEXEC') or die();
 
-/*
- * Emailscheduler Triggers model
+/**
+ * Class EmailschedulerModelTriggers
  */
-
 class EmailschedulerModelTriggers extends YireoModel
 {
 	/**
@@ -23,17 +22,5 @@ class EmailschedulerModelTriggers extends YireoModel
 	public function __construct()
 	{
 		parent::__construct('trigger');
-	}
-
-	/**
-	 * Method to modify the data once it is loaded
-	 *
-	 * @param array $data
-	 *
-	 * @return array
-	 */
-	protected function onDataLoad($data)
-	{
-		return $data;
 	}
 }
