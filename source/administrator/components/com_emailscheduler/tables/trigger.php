@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 /**
  * Trigger Table class
  */
-class TableTrigger extends YireoTable
+class EmailschedulerTableTrigger extends YireoTable
 {
 	/**
 	 * Constructor

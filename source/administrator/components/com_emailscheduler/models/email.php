@@ -24,8 +24,14 @@ class EmailschedulerModelEmail extends YireoModel
 	const SEND_STATE_PAUSED = 'paused';
 	const SEND_STATE_FAILED = 'failed';
 
+	/**
+	 * @var null
+	 */
 	protected $template_body = null;
 
+	/**
+	 * @var null
+	 */
 	protected $template_subject = null;
 
 	/**
@@ -65,13 +71,13 @@ class EmailschedulerModelEmail extends YireoModel
 			return false;
 		}
 
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__emailscheduler_emails'));
 		$query->where($db->quoteName('message_id') . '=' . $db->quote($messageId));
-
 		$query->setLimit(1);
+
 		$db->setQuery($query);
 		$id = $db->loadResult();
 
@@ -100,7 +106,7 @@ class EmailschedulerModelEmail extends YireoModel
 			return false;
 		}
 
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__emailscheduler_emails'));
@@ -127,9 +133,6 @@ class EmailschedulerModelEmail extends YireoModel
 
 	/**
 	 * Method to store the model
-	 *
-	 * @access     public
-	 * @subpackage Yireo
 	 *
 	 * @param mixed $data
 	 *
@@ -318,14 +321,7 @@ class EmailschedulerModelEmail extends YireoModel
 		$this->prepare($mailData);
 		$this->prepareAddresses($mailData, $mailer);
 
-		if (YireoHelper::isJoomla25())
-		{
-			$dispatcher = JDispatcher::getInstance();
-		}
-		else
-		{
-			$dispatcher = JEventDispatcher::getInstance();
-		}
+		$dispatcher = JEventDispatcher::getInstance();
 
 		// Allow plugins to modify the data
 		$dispatcher->trigger('onEmailschedulerMailBeforeSend', array(&$mailData));
@@ -479,9 +475,8 @@ class EmailschedulerModelEmail extends YireoModel
 	{
 		$this->initTwig();
 
-		$loader = new Twig_Loader_Array(array(
-			'body' => $text,
-		));
+		$params = array('body' => $text);
+		$loader = new Twig_Loader_Array($params);
 
 		$twig = new Twig_Environment($loader);
 
@@ -534,7 +529,7 @@ class EmailschedulerModelEmail extends YireoModel
 	 */
 	protected function parseImages(&$mailData)
 	{
-		$root = substr(JURI::root(), 0, -1);
+		$root = substr(JUri::root(), 0, -1);
 		$root = str_replace('/administrator', '', $root);
 
 		// Scan the body for links
@@ -601,8 +596,6 @@ class EmailschedulerModelEmail extends YireoModel
 
 	/**
 	 * Method to modify the data once it is loaded
-	 *
-	 * @access protected
 	 *
 	 * @param array $data
 	 *

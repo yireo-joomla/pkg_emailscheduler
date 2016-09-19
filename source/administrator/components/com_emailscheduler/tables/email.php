@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 /**
  * Email Table class
  */
-class TableEmail extends YireoTable
+class EmailschedulerTableEmail extends YireoTable
 {
 	/**
 	 * Constructor

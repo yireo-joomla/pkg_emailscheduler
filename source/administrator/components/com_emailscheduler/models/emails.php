@@ -34,16 +34,4 @@ class EmailschedulerModelEmails extends YireoModel
 		$this->_search          = array('subject', 'to', 'cc', 'bcc');
 		$this->_orderby_default = 'send_date';
 	}
-
-	/**
-	 * Method to modify the data once it is loaded
-	 *
-	 * @param array $data
-	 *
-	 * @return array
-	 */
-	protected function onDataLoad($data)
-	{
-		return $data;
-	}
 }

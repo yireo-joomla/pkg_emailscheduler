@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 /**
  * Log Table class
  */
-class TableLog extends YireoTable
+class EmailschedulerTableLog extends YireoTable
 {
 	/**
 	 * Constructor
