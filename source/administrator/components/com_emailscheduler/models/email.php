@@ -450,6 +450,7 @@ class EmailschedulerModelEmail extends YireoModel
 		}
 
 		$this->parseViaTwig($mailData->body_html, $templateVariables);
+		$this->parseViaTwig($mailData->subject,   $templateVariables);
 
 		// Replace variables
 		foreach ($templateVariables as $variableName => $variableValue)
