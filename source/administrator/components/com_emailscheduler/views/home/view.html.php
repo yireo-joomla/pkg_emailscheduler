@@ -36,10 +36,10 @@ class EmailschedulerViewHome extends YireoViewHome
         $this->assignRef( 'icons', $icons );
 
         $urls = array();
-        $urls['twitter'] ='http://twitter.com/yireo';
-        $urls['facebook'] ='http://www.facebook.com/yireo';
-        $urls['tutorials'] = 'http://www.yireo.com/tutorials/emailscheduler';
-        $urls['jed'] = 'http://extensions.joomla.org/extensions/social-web/social-auto-publish/16753';
+        $urls['twitter'] ='https://twitter.com/yireo';
+        $urls['facebook'] ='https://www.facebook.com/yireo';
+        $urls['tutorials'] = 'https://www.yireo.com/tutorials/emailscheduler';
+        $urls['jed'] = 'https://extensions.joomla.org/extensions/extension/contacts-and-feedback/email/yireo-emailscheduler';
         $this->assignRef( 'urls', $urls );
 
         JToolBarHelper::custom('updateQueries', 'archive', '', 'DB Upgrade', false);
