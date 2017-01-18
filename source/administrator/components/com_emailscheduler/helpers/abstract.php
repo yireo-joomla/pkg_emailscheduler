@@ -22,7 +22,7 @@ class HelperAbstract
 	static public function getStructure()
 	{
 		return array(
-			'title'            => 'Emailscheduler',
+			'title'            => 'EmailScheduler',
 			'menu'             => array(
 				'home'      => 'Home',
 				'emails'    => 'Emails',
