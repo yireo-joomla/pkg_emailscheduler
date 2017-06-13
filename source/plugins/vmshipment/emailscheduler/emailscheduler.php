@@ -51,9 +51,9 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	public function plgVmOnUpdateOrderShipment($data, $old_order_status)
 	{
 		// Exit if there is no order ID
-		$order_id = $data->virtuemart_order_id;
+		$orderId = $data->virtuemart_order_id;
 
-        if (empty($order_id))
+        if (empty($orderId))
 		{
 			return true;
 		}
@@ -62,7 +62,7 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 		try
 		{
 			$orderModel = VmModel::getModel('orders');
-			$order = $orderModel->getOrder($order_id);
+			$order = $orderModel->getOrder($orderId);
 		}
 		catch (Exception $e)
 		{
@@ -104,10 +104,6 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 		$customVariables['products'] = $this->getProductsExtract($order);
 		$customVariables['order'] = $this->getOrderExtract($order);
 		$customVariables['customer'] = $this->getCustomerExtract($order);
-        //print_r($customVariables);
-        //print_r($order);
-        //exit;
-
 		// Gather the product IDs and SKUs
 		$productIds = array();
 		$productSkus = array();
@@ -192,7 +188,7 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	/**
 	 * Gather a simple extract of the VirtueMart order
 	 *
-	 * @param $order
+	 * @param array $order
 	 *
 	 * @return array
 	 */
@@ -211,7 +207,7 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	/**
 	 * Gather a simple extract of the VirtueMart customer
 	 *
-	 * @param $order
+	 * @param array $order
 	 *
 	 * @return array
 	 */

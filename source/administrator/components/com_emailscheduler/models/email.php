@@ -1,11 +1,12 @@
 <?php
-/*
+/**
  * Joomla! component Emailscheduler
  *
- * @author Yireo (info@yireo.com)
- * @copyright Copyright Yireo.com 2015
- * @license GNU Public License
- * @link http://www.yireo.com
+ * @package   EmailScheduler
+ * @author    Yireo <info@yireo.com>
+ * @copyright 2017 Yireo
+ * @license   GNU Public License
+ * @link      https://www.yireo.com
  */
 
 // Check to ensure this file is included in Joomla!
@@ -27,12 +28,12 @@ class EmailschedulerModelEmail extends YireoModel
 	/**
 	 * @var null
 	 */
-	protected $template_body = null;
+	protected $templateBody = null;
 
 	/**
 	 * @var null
 	 */
-	protected $template_subject = null;
+	protected $templateSubject = null;
 
 	/**
 	 * Constructor method
@@ -47,7 +48,7 @@ class EmailschedulerModelEmail extends YireoModel
 	 *
 	 * @param int $id
 	 *
-	 * @return array
+	 * @return object
 	 */
 	public function load($id)
 	{
@@ -62,7 +63,7 @@ class EmailschedulerModelEmail extends YireoModel
 	 *
 	 * @param string $messageId
 	 *
-	 * @return false|array
+	 * @return object|false
 	 */
 	public function loadByMessageId($messageId)
 	{
@@ -97,7 +98,7 @@ class EmailschedulerModelEmail extends YireoModel
 	 *
 	 * @param array $search
 	 *
-	 * @return false|array
+	 * @return object|false
 	 */
 	public function loadBySearch($search = array())
 	{
@@ -140,48 +141,77 @@ class EmailschedulerModelEmail extends YireoModel
 	 */
 	public function store($data)
 	{
-		if (isset($data['item']['send_date']))
-		{
-			$send_date = $data['item']['send_date'];
-		}
-		elseif (isset($data['send_date']))
-		{
-			$send_date = $data['send_date'];
-		}
-		else
-		{
-			$send_date = null;
-		}
+		$sendDate = $this->getSendDate($data);
 
-		if (isset($data['item']['send_time']))
-		{
-			$send_time = $data['item']['send_time'];
-		}
-		elseif (isset($data['send_time']))
-		{
-			$send_time = $data['send_time'];
-		}
-		else
-		{
-			$send_time = null;
-		}
-
-		$send_date = strtotime($send_date);
-
-		if (!empty($send_time) && preg_match('/([0-9]{2}):([0-9]{2})/', $send_time))
-		{
-			$send_date = date('Y-m-d', $send_date) . ' ' . $send_time;
-			$send_date = strtotime($send_date);
-		}
-
-		if (empty($send_date))
-		{
-			$send_date = time() + 5 * 60;
-		}
-
-		$data['item']['send_date'] = date('Y-m-d H:i:s', $send_date);
+		$data['item']['send_date'] = date('Y-m-d H:i:s', $sendDate);
 
 		return parent::store($data);
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return false|int|string
+	 */
+	protected function getSendDate($data)
+	{
+		$sendDate = $this->getSendDateFromData($data);
+		$sendDate = strtotime($sendDate);
+		
+		$sendTime = $this->getSendTimeFromData($data);
+		
+		if (!empty($sendTime) && preg_match('/([0-9]{2}):([0-9]{2})/', $sendTime))
+		{
+			$sendDate = date('Y-m-d', $sendDate) . ' ' . $sendTime;
+			$sendDate = strtotime($sendDate);
+		}
+
+		if (!empty($sendDate))
+		{
+			return $sendDate;
+		}
+
+		return time() + 5 * 60;
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	protected function getSendDateFromData($data)
+	{
+		if (isset($data['item']['send_date']))
+		{
+			return $data['item']['send_date'];
+		}
+		
+		if (isset($data['send_date']))
+		{
+			return $data['send_date'];
+		}
+		
+		return '';
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	protected function getSendTimeFromData($data)
+	{
+		if (isset($data['item']['send_time']))
+		{
+			return $data['item']['send_time'];
+		}
+
+		if (isset($data['send_time']))
+		{
+			return $data['send_time'];
+		}
+
+		return '';
 	}
 
 	/**
@@ -383,12 +413,12 @@ class EmailschedulerModelEmail extends YireoModel
 
 			if (!empty($template->body))
 			{
-				$this->template_body = $template->body;
+				$this->templateBody = $template->body;
 			}
 
 			if (!empty($template->subject))
 			{
-				$this->template_subject = $template->subject;
+				$this->templateSubject = $template->subject;
 			}
 		}
 	}
@@ -401,15 +431,15 @@ class EmailschedulerModelEmail extends YireoModel
 	protected function parseText(&$mailData)
 	{
 		// Apply the template to the HTML-body
-		if (!empty($this->template_body))
+		if (!empty($this->templateBody))
 		{
-			$mailData->body_html = str_ireplace('{body}', $mailData->body_html, $this->template_body);
+			$mailData->body_html = str_ireplace('{body}', $mailData->body_html, $this->templateBody);
 		}
 
 		// Apply the template to the subject
-		if (!empty($this->template_subject))
+		if (!empty($this->templateSubject))
 		{
-			$mailData->subject = str_ireplace('{subject}', $mailData->subject, $this->template_subject);
+			$mailData->subject = str_ireplace('{subject}', $mailData->subject, $this->templateSubject);
 		}
 
 		// Construct variables
@@ -450,7 +480,7 @@ class EmailschedulerModelEmail extends YireoModel
 		}
 
 		$this->parseViaTwig($mailData->body_html, $templateVariables);
-		$this->parseViaTwig($mailData->subject,   $templateVariables);
+		$this->parseViaTwig($mailData->subject, $templateVariables);
 
 		// Replace variables
 		foreach ($templateVariables as $variableName => $variableValue)
@@ -470,7 +500,7 @@ class EmailschedulerModelEmail extends YireoModel
 	 * Method to use Twig to parse a text
 	 *
 	 * @param string $text
-	 * @param array  $variables
+	 * @param array $variables
 	 */
 	public function parseViaTwig(&$text, $variables)
 	{
@@ -604,15 +634,15 @@ class EmailschedulerModelEmail extends YireoModel
 	 */
 	protected function onDataLoad($data)
 	{
-		$send_date = strtotime($data->send_date);
+		$sendDate = strtotime($data->send_date);
 
-		if (empty($send_date))
+		if (empty($sendDate))
 		{
-			$send_date       = time() + 5 * 60;
-			$data->send_date = date('Y-m-d H:i:s', $send_date);
+			$sendDate       = time() + 5 * 60;
+			$data->send_date = date('Y-m-d H:i:s', $sendDate);
 		}
 
-		$data->send_time = date('H:i:s', $send_date);
+		$data->send_time = date('H:i:s', $sendDate);
 
 		if (!empty($data->variables))
 		{

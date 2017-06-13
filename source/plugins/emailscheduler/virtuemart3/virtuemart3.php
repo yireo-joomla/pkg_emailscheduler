@@ -67,14 +67,14 @@ class PlgEmailschedulerVirtuemart3 extends EmailschedulerPluginTrigger
 	 */
 	public function onEmailschedulerVirtuemart3Search($search = null, $ids = array(), $limit = 0)
 	{
-        $this->loadVirtueMart();
 		$db = JFactory::getDbo();
+		$languageTag = $this->getLanguageTag();
 
 		/** @var JDatabaseQuery $query */
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName(array('p.virtuemart_product_id', 'l.product_name')));
 		$query->from($db->quoteName('#__virtuemart_products', 'p'));
-		$query->leftJoin($db->quoteName('#__virtuemart_products_'.VmConfig::$vmlang, 'l') . ' ON p.virtuemart_product_id = l.virtuemart_product_id');
+		$query->leftJoin($db->quoteName('#__virtuemart_products_'.$languageTag, 'l') . ' ON p.virtuemart_product_id = l.virtuemart_product_id');
 
 		if (!empty($search))
 		{
@@ -103,6 +103,25 @@ class PlgEmailschedulerVirtuemart3 extends EmailschedulerPluginTrigger
 		}
 
 		return $matches;
+	}
+
+	/**
+	 * @return bool|mixed|string
+	 */
+	protected function getLanguageTag()
+	{
+		$this->loadVirtueMart();
+		$languageTag = VmConfig::$vmlang;
+
+		if (!empty($languageTag)) {
+			return $languageTag;
+		}
+
+		$languageTag = JFactory::getLanguage()->getTag();
+		$languageTag = str_replace('-', '_', $languageTag);
+		$languageTag = strtolower($languageTag);
+
+		return $languageTag;
 	}
 
     /**
