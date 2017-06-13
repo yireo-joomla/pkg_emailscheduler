@@ -25,7 +25,7 @@ class EmailschedulerViewEmail extends YireoViewForm
 	 */
 	public function display($tpl = null)
 	{
-		$layout = $this->application->input->getCmd('layout');
+		$layout = $this->app->input->getCmd('layout');
 
 		if ($layout == 'preview')
 		{
