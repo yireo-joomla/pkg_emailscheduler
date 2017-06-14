@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `#__emailscheduler_emails` (
   `bcc` varchar(255) NOT NULL,
   `headers` TEXT NOT NULL,
   `attachments` TEXT NOT NULL,
+  `variables` TEXT NOT NULL,
   `send_state` varchar(20) NOT NULL,
   `send_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

@@ -3,9 +3,9 @@
  * Joomla! component Emailscheduler
  *
  * @author Yireo (info@yireo.com)
- * @copyright Copyright 2015
+ * @copyright Copyright 2017
  * @license GNU Public License
- * @link http://www.yireo.com
+ * @link https://www.yireo.com
  */
 
 // Check to ensure this file is included in Joomla!
@@ -18,12 +18,15 @@ class EmailschedulerUpdate
 {
 	/**
 	 * Run update queries
+	 *
+	 * @return void
 	 */
 	static public function runUpdateQueries()
 	{
 		$sqlfiles = array(
 			JPATH_COMPONENT . '/sql/install.sql',
-			JPATH_COMPONENT . '/sql/update.sql',);
+			JPATH_COMPONENT . '/sql/update.sql',
+		);
 
 		foreach ($sqlfiles as $sqlfile)
 		{
@@ -36,33 +39,32 @@ class EmailschedulerUpdate
 
 	/**
 	 * Run update queries from file
+	 *
+	 * @return void
 	 */
 	static public function runUpdateQueriesFromFile($sqlfile)
 	{
-		$db = JFactory::getDBO();
-		$buffer = file_get_contents($sqlfile);
-
-		if (method_exists('JDatabaseDriver', 'splitSql'))
-		{
-			$queries = JDatabaseDriver::splitSql($buffer);
-		}
-		elseif (method_exists('JDatabase', 'splitSql'))
-		{
-			$queries = JDatabase::splitSql($buffer);
-		}
-		else
-		{
-			return false;
-		}
+		$db      = JFactory::getDBO();
+		$buffer  = file_get_contents($sqlfile);
+		$queries = JDatabaseDriver::splitSql($buffer);
 
 		foreach ($queries as $query)
 		{
 			$query = trim($query);
 
-			if ($query != '' && $query{0} != '#')
+			if ($query === '' || $query{0} === '#')
+			{
+				continue;
+			}
+
+			try
 			{
 				$db->setQuery($query);
 				$db->execute();
+			}
+			catch (Exception $e)
+			{
+				continue;
 			}
 		}
 	}
