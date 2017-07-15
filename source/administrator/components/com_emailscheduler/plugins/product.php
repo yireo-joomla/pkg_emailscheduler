@@ -127,6 +127,9 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 
 		$email->setRecipients($recipients);
 
+        // Extend variables through a simple PHP file
+        $params['variables'] = $this->extendVariables($params['variables']);
+
 		// Set additional variables
 		if (!empty($params['variables']))
 		{
@@ -139,6 +142,40 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 
 		return true;
 	}
+
+    private function extendVariables($variables)
+    {
+        $variableFile = $this->getVariableFile();
+
+        if (empty($variableFile))
+        {
+            return $variables;
+        }
+
+        if (!is_array($variables))
+        {
+            $variables = [];
+        }
+
+		include $templateFile;
+
+        if (!is_array($variables))
+        {
+            throw new Exception('Variables are no longer in array format');
+        }
+
+        return $variables;
+    }
+
+    private function getVariableFile()
+    {
+        $type = get_class($type);
+
+		if (file_exists(JPATH_SITE . '/media/com_emailscheduler/email/variables/' . $type . '.php'))
+		{
+			return JPATH_SITE . '/media/com_emailscheduler/email/variables/' . $type . '.php';
+		}
+    }
 
 	/**
 	 * Create an unique string that identifies this email
@@ -157,4 +194,19 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 
 		return md5(var_export($actions, true) . var_export($params, true));
 	}
+
+
+    protected function objectToArray($object)
+    {
+        $array = [];
+        $variables = get_object_vars($object);
+
+        foreach ($variables as $name => $value) {
+            if (!is_array($value) && !is_object($value)) {
+                $array[$name] = $value;
+            }
+        }
+
+        return $array;
+    }
 }
