@@ -157,7 +157,7 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
             $variables = [];
         }
 
-		include $templateFile;
+		include $variableFile;
 
         if (!is_array($variables))
         {
@@ -169,7 +169,7 @@ class EmailschedulerPluginProduct extends EmailschedulerPluginAbstract
 
     private function getVariableFile()
     {
-        $type = get_class($type);
+        $type = get_class($this);
 
 		if (file_exists(JPATH_SITE . '/media/com_emailscheduler/email/variables/' . $type . '.php'))
 		{

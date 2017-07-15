@@ -97,13 +97,16 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	 *
 	 * @return bool
 	 */
-	public function handleOrder($order)
+	private function handleOrder($order)
 	{
 		// Gather custom variables
 		$customVariables = array();
+		$customVariables['bt'] = $this->objectToArray($order['details']['BT']);
+		$customVariables['st'] = $this->objectToArray($order['details']['ST']);
 		$customVariables['products'] = $this->getProductsExtract($order);
 		$customVariables['order'] = $this->getOrderExtract($order);
 		$customVariables['customer'] = $this->getCustomerExtract($order);
+
 		// Gather the product IDs and SKUs
 		$productIds = array();
 		$productSkus = array();
@@ -192,16 +195,16 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	 *
 	 * @return array
 	 */
-	public function getOrderExtract($order)
+	private function getOrderExtract($order)
 	{
-		$details = $order['details']['BT'];
+		$details = [];
 
-		return array(
-			'id' => $details->virtuemart_order_id,
-			'status' => $details->order_status,
-			'created' => $details->created_on,
-			'order_number' => $details->order_number,
-		);
+		$details['id'] = $details->virtuemart_order_id;
+		$details['status'] = $details->order_status;
+		$details['created'] = $details->created_on;
+		$details['order_number'] = $details->order_number;
+
+        return $details;
 	}
 
 	/**
@@ -211,7 +214,7 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	 *
 	 * @return array
 	 */
-	public function getCustomerExtract($order)
+	private function getCustomerExtract($order)
 	{
 		$details = $order['details']['BT'];
 
@@ -228,17 +231,19 @@ class PlgVmShipmentEmailscheduler extends EmailschedulerPluginProduct
 	 *
 	 * @return array
 	 */
-	public function getProductsExtract($order)
+	private function getProductsExtract($order)
 	{
 		$products = array();
 
 		foreach ($order['items'] as $item)
 		{
-			$products[] = array(
-				'id' => $item->virtuemart_product_id,
-				'sku' => $item->order_item_sku,
-				'name' => $item->order_item_name,
-			);
+            $product = $this->objectToArray($item);
+
+			$product['id'] = $item->virtuemart_product_id;
+			$product['sku'] = $item->order_item_sku;
+			$product['name'] = $item->order_item_name;
+
+            $products[] = $product;
 		}
 
 		return $products;
