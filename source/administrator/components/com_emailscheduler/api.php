@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Include the loader
-require_once dirname(__FILE__) . '/lib/loader.php';
+require_once dirname(__FILE__) . '/helpers/loader.php';
 
 /**
  * Emailscheduler API

@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Include the loader
-require_once JPATH_COMPONENT . '/lib/loader.php';
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/loader.php';
 
 // Load the libraries
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/helper.php';
