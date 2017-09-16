@@ -143,6 +143,15 @@ class EmailschedulerModelEmail extends YireoModel
 	{
 		$sendDate = $this->getSendDate($data);
 
+		$arrayNames = ['to', 'cc', 'bcc'];
+		foreach ($arrayNames as $arrayName)
+		{
+			if (is_array($data['item'][$arrayName]))
+			{
+				$data['item'][$arrayName] = array_unique($data['item'][$arrayName]);
+			}
+		}
+
 		$data['item']['send_date'] = date('Y-m-d H:i:s', $sendDate);
 
 		return parent::store($data);
@@ -157,9 +166,9 @@ class EmailschedulerModelEmail extends YireoModel
 	{
 		$sendDate = $this->getSendDateFromData($data);
 		$sendDate = strtotime($sendDate);
-		
+
 		$sendTime = $this->getSendTimeFromData($data);
-		
+
 		if (!empty($sendTime) && preg_match('/([0-9]{2}):([0-9]{2})/', $sendTime))
 		{
 			$sendDate = date('Y-m-d', $sendDate) . ' ' . $sendTime;
@@ -185,12 +194,12 @@ class EmailschedulerModelEmail extends YireoModel
 		{
 			return $data['item']['send_date'];
 		}
-		
+
 		if (isset($data['send_date']))
 		{
 			return $data['send_date'];
 		}
-		
+
 		return '';
 	}
 
@@ -638,7 +647,7 @@ class EmailschedulerModelEmail extends YireoModel
 
 		if (empty($sendDate))
 		{
-			$sendDate       = time() + 5 * 60;
+			$sendDate        = time() + 5 * 60;
 			$data->send_date = date('Y-m-d H:i:s', $sendDate);
 		}
 

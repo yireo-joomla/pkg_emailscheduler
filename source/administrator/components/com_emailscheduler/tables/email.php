@@ -17,16 +17,22 @@ defined('_JEXEC') or die('Restricted access');
 class EmailschedulerTableEmail extends YireoTable
 {
 	/**
+	 * @var string
+	 */
+	protected $subject;
+
+	/**
 	 * Constructor
 	 *
-	 * @param JDatabase $db
+	 * @param JDatabaseDriver $db
 	 */
-	public function __construct(& $db)
+	public function __construct(JDatabaseDriver &$db)
 	{
 		// Set the required fields
 		$this->_required = array(
 			'subject',
-			'to',);
+			'to',
+		);
 
 		// Call the constructor
 		parent::__construct('#__emailscheduler_emails', 'id', $db);
@@ -35,7 +41,7 @@ class EmailschedulerTableEmail extends YireoTable
 	/**
 	 * Overloaded bind method
 	 *
-	 * @param array  $data
+	 * @param array $data
 	 * @param string $ignore
 	 *
 	 * @return mixed
@@ -94,6 +100,7 @@ class EmailschedulerTableEmail extends YireoTable
 	 * Overloaded check method to ensure data integrity
 	 *
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function check()
 	{
@@ -112,11 +119,9 @@ class EmailschedulerTableEmail extends YireoTable
 		{
 			$rt = $this->validateEmail($this->$field);
 
-			if ($rt == false)
+			if ($rt === false)
 			{
-				$this->_error = JText::sprintf('COM_EMAILSCHEDULER_TABLE_INVALID_EMAIL', $this->$field);
-
-				return false;
+				throw new Exception(JText::sprintf('COM_EMAILSCHEDULER_TABLE_INVALID_EMAIL'));
 			}
 		}
 
@@ -125,9 +130,7 @@ class EmailschedulerTableEmail extends YireoTable
 
 		if ($too_many_chars < 0)
 		{
-			$this->_error = JText::sprintf('COM_EMAILSCHEDULER_TABLE_SUBJECT_TOO_LARGE', 0 - $too_many_chars);
-
-			return false;
+			throw new Exception(JText::sprintf('COM_EMAILSCHEDULER_TABLE_SUBJECT_TOO_LARGE', 0 - $too_many_chars));
 		}
 
 		return true;
@@ -156,14 +159,29 @@ class EmailschedulerTableEmail extends YireoTable
 		foreach ($emails as $email)
 		{
 			$email = trim($email);
-			$rt = JMailHelper::isEmailAddress($email);
-
-			if ($rt == false)
+			if (JMailHelper::isEmailAddress($email))
 			{
-				return false;
+				continue;
 			}
+
+			if ($this->isGroupIdentifier($email))
+			{
+				continue;
+			}
+
+			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param string $group
+	 *
+	 * @return bool
+	 */
+	protected function isGroupIdentifier($group)
+	{
+		return (bool) (preg_match('/^group:([0-9]+)/', $group));
 	}
 }
