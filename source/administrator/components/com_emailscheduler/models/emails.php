@@ -33,5 +33,6 @@ class EmailschedulerModelEmails extends YireoModel
 
 		$this->_search          = array('subject', 'to', 'cc', 'bcc');
 		$this->_orderby_default = 'send_date';
+         $this->setConfig('limit_query', true);
 	}
 }

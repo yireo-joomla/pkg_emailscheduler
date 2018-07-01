@@ -25,6 +25,7 @@ class EmailschedulerModelLogs extends YireoModel
 
 		$this->_search          = array('email.subject', 'email.from', 'email.to', 'email.cc', 'email.bcc');
 		$this->_orderby_default = 'email_id';
+         $this->setConfig('limit_query', true);
 	}
 
 	/**
